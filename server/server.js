@@ -74,14 +74,28 @@ exports.handler = async (event, context) => {
       console.log('path:', event.path);
       console.log('rawPath:', event.rawPath);
 
+      // Extract path - handle both `/api/...` and `/prod/api/...` formats
+      let requestPath = event.path || event.rawPath || event.requestContext?.path || '/';
+      
+      // Remove stage prefix if present (API Gateway may include it)
+      if (requestPath.startsWith('/prod/')) {
+        requestPath = requestPath.substring(5); // Remove `/prod`
+      }
+      if (requestPath.startsWith('/dev/')) {
+        requestPath = requestPath.substring(4); // Remove `/dev`
+      }
+      
+      // Remove query string
+      requestPath = requestPath.split('?')[0];
+      
       const mockReq = {
         method: event.httpMethod || 'GET',
-        url: event.path || event.rawPath || event.requestContext?.path || '/',
+        url: requestPath || '/',
         headers: event.headers || {},
         body: event.body || ''
       };
       
-      console.log('Parsed Request:', { method: mockReq.method, url: mockReq.url });
+      console.log('Parsed Request:', { method: mockReq.method, url: mockReq.url, originalPath: event.path });
 
       const mockRes = {
         statusCode: 200,
@@ -96,6 +110,15 @@ exports.handler = async (event, context) => {
         },
         end: function(data) {
           this.body = data || '';
+          
+          // Ensure CORS headers are always present in response
+          if (!this.headers['Access-Control-Allow-Origin']) {
+            this.headers['Access-Control-Allow-Origin'] = '*';
+            this.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
+            this.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
+            this.headers['Access-Control-Max-Age'] = '86400';
+          }
+          
           resolve({
             statusCode: this.statusCode,
             headers: this.headers,
