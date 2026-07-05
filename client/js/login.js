@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const BASE_URL = 'https://r4muckg5ej.execute-api.us-east-1.amazonaws.com/prod';
   const form = document.getElementById('loginForm');
   const message = document.getElementById('message');
   const loading = document.querySelector('.loading');
@@ -17,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loading.classList.add('show');
 
     try {
-      const response = await fetch('https://r4muckg5ej.execute-api.us-east-1.amazonaws.com/prod/api/auth/login', {
+      const response = await fetch(`${BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

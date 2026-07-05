@@ -66,101 +66,55 @@ exports.handler = async (event, context) => {
   }
 
   return new Promise((resolve, reject) => {
-    try {
-      // Debug logging - log the ENTIRE raw event
-      console.log('Full Lambda Event:', JSON.stringify(event, null, 2));
-      console.log('Event keys:', Object.keys(event));
-      console.log('httpMethod:', event.httpMethod);
-      console.log('path:', event.path);
-      console.log('rawPath:', event.rawPath);
+    const mockReq = {
+      method: event.httpMethod || 'GET',
+      url: event.path || event.rawPath || event.requestContext?.path || '/',
+      headers: event.headers || {}
+    };
 
-      // Extract path - handle both `/api/...` and `/prod/api/...` formats
-      let requestPath = event.path || event.rawPath || event.requestContext?.path || '/';
-      
-      // Remove stage prefix if present (API Gateway may include it)
-      if (requestPath.startsWith('/prod/')) {
-        requestPath = requestPath.substring(5); // Remove `/prod`
+    const mockRes = {
+      statusCode: 200,
+      headers: {},
+      body: '',
+      setHeader: function(key, value) {
+        this.headers[key] = value;
+      },
+      writeHead: function(code, headers) {
+        this.statusCode = code;
+        if (headers) Object.assign(this.headers, headers);
+      },
+      end: function(data) {
+        this.body = data || '';
+        resolve({
+          statusCode: this.statusCode,
+          headers: this.headers,
+          body: this.body,
+          isBase64Encoded: false
+        });
       }
-      if (requestPath.startsWith('/dev/')) {
-        requestPath = requestPath.substring(4); // Remove `/dev`
+    };
+
+    cors(mockReq, mockRes, () => {
+      if (mockReq.url.startsWith('/api/')) {
+        const pathname = mockReq.url.split('?')[0];
+        const method = mockReq.method;
+        
+        const authHandled = handleAuthRoutes(mockReq, mockRes, pathname, method);
+        if (authHandled === true) return;
+
+        const parkingHandled = parkingRoutes(mockReq, mockRes);
+        if (parkingHandled !== null) return;
+
+        const adminHandled = adminRoutes(mockReq, mockRes);
+        if (adminHandled !== null) return;
+
+        mockRes.writeHead(404, { 'Content-Type': 'application/json' });
+        mockRes.end(JSON.stringify({ error: 'Route not found' }));
+        return;
       }
-      
-      // Remove query string
-      requestPath = requestPath.split('?')[0];
-      
-      const mockReq = {
-        method: event.httpMethod || 'GET',
-        url: requestPath || '/',
-        headers: event.headers || {},
-        body: event.body || ''
-      };
-      
-      console.log('Parsed Request:', { method: mockReq.method, url: mockReq.url, originalPath: event.path });
 
-      const mockRes = {
-        statusCode: 200,
-        headers: {},
-        body: '',
-        setHeader: function(key, value) {
-          this.headers[key] = value;
-        },
-        writeHead: function(code, headers) {
-          this.statusCode = code;
-          if (headers) Object.assign(this.headers, headers);
-        },
-        end: function(data) {
-          this.body = data || '';
-          
-          // Ensure CORS headers are always present in response
-          if (!this.headers['Access-Control-Allow-Origin']) {
-            this.headers['Access-Control-Allow-Origin'] = '*';
-            this.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
-            this.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
-            this.headers['Access-Control-Max-Age'] = '86400';
-          }
-          
-          resolve({
-            statusCode: this.statusCode,
-            headers: this.headers,
-            body: this.body,
-            isBase64Encoded: false
-          });
-        }
-      };
-
-      cors(mockReq, mockRes, () => {
-        try {
-          if (mockReq.url.startsWith('/api/')) {
-            const pathname = mockReq.url.split('?')[0];
-            const method = mockReq.method;
-            
-            const authHandled = handleAuthRoutes(mockReq, mockRes, pathname, method);
-            if (authHandled === true) return;
-
-            const parkingHandled = parkingRoutes(mockReq, mockRes);
-            if (parkingHandled !== null) return;
-
-            const adminHandled = adminRoutes(mockReq, mockRes);
-            if (adminHandled !== null) return;
-
-            mockRes.writeHead(404, { 'Content-Type': 'application/json' });
-            mockRes.end(JSON.stringify({ error: 'Route not found' }));
-            return;
-          }
-
-          // Lambda doesn't serve static files - frontend is on GitHub Pages
-          mockRes.writeHead(404, { 'Content-Type': 'application/json' });
-          mockRes.end(JSON.stringify({ error: 'Static files served from GitHub Pages' }));
-        } catch (error) {
-          console.error('Error in route handler:', error);
-          mockRes.writeHead(500, { 'Content-Type': 'application/json' });
-          mockRes.end(JSON.stringify({ error: error.message }));
-        }
-      });
-    } catch (error) {
-      console.error('Lambda handler error:', error);
-      reject(error);
-    }
+      serveStatic(mockReq, mockRes);
+    });
   });
 };
 

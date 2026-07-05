@@ -1,4 +1,3 @@
-// API Base URL - Update this to your API Gateway URL
 const BASE_URL = 'https://r4muckg5ej.execute-api.us-east-1.amazonaws.com/prod';
 
 async function requestJson(url, options = {}) {
@@ -13,9 +12,7 @@ async function requestJson(url, options = {}) {
     headers.Authorization = `Bearer ${token}`;
   }
   
-  // Prepend base URL if using relative path
   const fullUrl = url.startsWith('http') ? url : `${BASE_URL}${url}`;
-  
   const response = await fetch(fullUrl, {
     headers,
     ...options
