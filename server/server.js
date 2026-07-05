@@ -66,17 +66,18 @@ exports.handler = async (event, context) => {
   }
 
   return new Promise((resolve, reject) => {
-    // Debug logging - log the entire event
-    console.log('Raw Event:', JSON.stringify(event, null, 2));
+    try {
+      // Debug logging - log the entire event
+      console.log('Raw Event:', JSON.stringify(event, null, 2));
 
-    const mockReq = {
-      method: event.httpMethod || 'GET',
-      url: event.path || event.rawPath || event.requestContext?.path || '/',
-      headers: event.headers || {},
-      body: event.body || ''
-    };
-    
-    console.log('Parsed Request:', { method: mockReq.method, url: mockReq.url });
+      const mockReq = {
+        method: event.httpMethod || 'GET',
+        url: event.path || event.rawPath || event.requestContext?.path || '/',
+        headers: event.headers || {},
+        body: event.body || ''
+      };
+      
+      console.log('Parsed Request:', { method: mockReq.method, url: mockReq.url });
 
     const mockRes = {
       statusCode: 200,
@@ -101,29 +102,43 @@ exports.handler = async (event, context) => {
     };
 
     cors(mockReq, mockRes, () => {
-      if (mockReq.url.startsWith('/api/')) {
-        const pathname = mockReq.url.split('?')[0];
-        const method = mockReq.method;
-        
-        const authHandled = handleAuthRoutes(mockReq, mockRes, pathname, method);
-        if (authHandled === true) return;
+      try {
+        if (mockReq.url.startsWith('/api/')) {
+          const pathname = mockReq.url.split('?')[0];
+          const method = mockReq.method;
+          
+          const authHandled = handleAuthRoutes(mockReq, mockRes, pathname, method);
+          if (authHandled === true) return;
 
-        const parkingHandled = parkingRoutes(mockReq, mockRes);
-        if (parkingHandled !== null) return;
+          const parkingHandled = parkingRoutes(mockReq, mockRes);
+          if (parkingHandled !== null) return;
 
-        const adminHandled = adminRoutes(mockReq, mockRes);
-        if (adminHandled !== null) return;
+          const adminHandled = adminRoutes(mockReq, mockRes);
+          if (adminHandled !== null) return;
 
+          mockRes.writeHead(404, { 'Content-Type': 'application/json' });
+          mockRes.end(JSON.stringify({ error: 'Route not found' }));
+          return;
+        }
+
+        // Lambda doesn't serve static files - frontend is on GitHub Pages
         mockRes.writeHead(404, { 'Content-Type': 'application/json' });
-        mockRes.end(JSON.stringify({ error: 'Route not found' }));
-        return;
+        mockRes.end(JSON.stringify({ error: 'Static files served from GitHub Pages' }));
+      } catch (error) {
+        console.error('Error in route handler:', error);
+        mockRes.writeHead(500, { 'Content-Type': 'application/json' });
+        mockRes.end(JSON.stringify({ error: error.message }));
       }
-
-      // Lambda doesn't serve static files - frontend is on GitHub Pages
-      mockRes.writeHead(404, { 'Content-Type': 'application/json' });
-      mockRes.end(JSON.stringify({ error: 'Static files served from GitHub Pages' }));
     });
-  });
+    } catch (error) {
+      console.error('Lambda handler error:', error);
+      return {
+        statusCode: 500,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: error.message }),
+        isBase64Encoded: false
+      };
+    }
 };
 
 // Local development server (only runs when executed directly with node, not in Lambda)
