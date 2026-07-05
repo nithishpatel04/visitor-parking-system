@@ -69,7 +69,8 @@ exports.handler = async (event, context) => {
     const mockReq = {
       method: event.httpMethod || 'GET',
       url: event.path || event.rawPath || event.requestContext?.path || '/',
-      headers: event.headers || {}
+      headers: event.headers || {},
+      body: event.body || ''
     };
 
     const mockRes = {
