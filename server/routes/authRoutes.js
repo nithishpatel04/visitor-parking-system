@@ -17,10 +17,10 @@ function parseBody(req) {
   });
 }
 
-function handleAuthRoutes(req, res, pathname, method) {
+async function handleAuthRoutes(req, res, pathname, method) {
   // POST /api/auth/login
   if (pathname === '/api/auth/login' && method === 'POST') {
-    parseBody(req).then(payload => {
+    parseBody(req).then(async payload => {
       const { username, password } = payload;
 
       if (!username || !password) {
@@ -36,7 +36,7 @@ function handleAuthRoutes(req, res, pathname, method) {
         return;
       }
 
-      const session = createSession(user);
+      const session = await createSession(user);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(session));
     }).catch(error => {
