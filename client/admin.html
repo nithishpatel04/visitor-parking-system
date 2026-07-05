@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Console</title>
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/admin.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Admin</p>
+        <h1>Parking Exceptions</h1>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html" class="secondary-btn">Dashboard</a>
+        <a href="parking.html">New Pass</a>
+        <button id="logoutBtn" class="secondary-btn" style="background: none; color: inherit; cursor: pointer; text-decoration: underline;">Logout</button>
+      </nav>
+    </header>
+
+    <main class="admin-shell">
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Monthly Usage by Building + Unit</h2>
+          <p>Grant temporary day-based exceptions so a unit can still receive parking passes after the monthly limit is reached.</p>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Building</th>
+              <th>Unit</th>
+              <th>This Month</th>
+              <th>Limit</th>
+              <th>Exception</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="unitRows"></tbody>
+        </table>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Exception History</h2>
+          <p>Every change to exception status is recorded here.</p>
+        </div>
+        <ul id="historyList" class="history-list"></ul>
+      </section>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/admin.js"></script>
+  </body>
+</html>
