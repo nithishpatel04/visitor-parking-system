@@ -1,0 +1,36 @@
+.form-shell {
+  padding: 1.5rem 2rem 2.5rem;
+}
+
+.panel {
+  background: #fff;
+  border: 1px solid #dfe7f2;
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.parking-form {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  margin-top: 1rem;
+}
+
+.helper-text {
+  color: #64748b;
+  margin-top: 0.4rem;
+}
+
+button[type="submit"] {
+  grid-column: 1 / -1;
+}
+
+.status-message {
+  margin-top: 0.85rem;
+  color: #2563eb;
+}
+
+@media (max-width: 700px) {
+  .parking-form { grid-template-columns: 1fr; }
+}

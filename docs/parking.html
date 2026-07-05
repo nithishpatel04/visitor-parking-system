@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>New Parking Pass</title>
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/parking.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Parking form</p>
+        <h1>New Parking Pass</h1>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html" class="secondary-btn">Back to Dashboard</a>
+        <a href="admin.html">Admin</a>
+        <button id="logoutBtn" class="secondary-btn" style="background: none; color: inherit; cursor: pointer; text-decoration: underline;">Logout</button>
+      </nav>
+    </header>
+
+    <main class="form-shell">
+      <section class="panel">
+        <h2>Visitor Parking Details</h2>
+        <p class="helper-text">Each Building + Unit combination is limited to 10 overnight parking days per month unless an exception is enabled.</p>
+        <form id="parkingForm" class="parking-form">
+          <label>
+            Building
+            <select name="building" required>
+              <option value="">Select building</option>
+              <option value="2 Sonic">2 Sonic</option>
+              <option value="6 Sonic">6 Sonic</option>
+            </select>
+          </label>
+          <label>
+            Unit
+            <input name="unit" type="text" required placeholder="Example: 12A" />
+          </label>
+          <label>
+            Resident
+            <input name="resident" type="text" required placeholder="Resident name" />
+          </label>
+          <label>
+            Plate
+            <input name="plate" type="text" required placeholder="ABC123" />
+          </label>
+          <label>
+            Vehicle
+            <input name="vehicle" type="text" required placeholder="Sedan, SUV, Truck" />
+          </label>
+          <label>
+            Color
+            <input name="color" type="text" required placeholder="Black" />
+          </label>
+          <label>
+            Duration
+            <select name="duration" required>
+              <option value="0">Day-time (today until 11:59 PM)</option>
+              <option value="1">1 Day</option>
+              <option value="2">2 Days</option>
+              <option value="3">3 Days</option>
+            </select>
+          </label>
+          <label>
+            Authorized By
+            <input name="authorizedBy" type="text" required placeholder="Manager or owner" />
+          </label>
+          <button class="primary-btn" type="submit">Save Parking Pass</button>
+        </form>
+        <p id="formMessage" class="status-message" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/parking.js"></script>
+  </body>
+</html>
