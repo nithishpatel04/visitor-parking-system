@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loading.classList.add('show');
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('https://r4muckg5ej.execute-api.us-east-1.amazonaws.com/prod/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

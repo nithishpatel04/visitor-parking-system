@@ -54,7 +54,7 @@ function logout() {
 
   // Notify server about logout
   if (token) {
-    fetch('/api/auth/logout', {
+    fetch('https://r4muckg5ej.execute-api.us-east-1.amazonaws.com/prod/api/auth/logout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token })
