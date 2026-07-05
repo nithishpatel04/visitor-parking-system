@@ -130,15 +130,7 @@ exports.handler = async (event, context) => {
         mockRes.end(JSON.stringify({ error: error.message }));
       }
     });
-    } catch (error) {
-      console.error('Lambda handler error:', error);
-      return {
-        statusCode: 500,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: error.message }),
-        isBase64Encoded: false
-      };
-    }
+  });
 };
 
 // Local development server (only runs when executed directly with node, not in Lambda)
