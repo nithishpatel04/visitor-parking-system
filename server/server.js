@@ -67,8 +67,12 @@ exports.handler = async (event, context) => {
 
   return new Promise((resolve, reject) => {
     try {
-      // Debug logging - log the entire event
-      console.log('Raw Event:', JSON.stringify(event, null, 2));
+      // Debug logging - log the ENTIRE raw event
+      console.log('Full Lambda Event:', JSON.stringify(event, null, 2));
+      console.log('Event keys:', Object.keys(event));
+      console.log('httpMethod:', event.httpMethod);
+      console.log('path:', event.path);
+      console.log('rawPath:', event.rawPath);
 
       const mockReq = {
         method: event.httpMethod || 'GET',
