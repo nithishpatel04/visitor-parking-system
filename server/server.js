@@ -79,57 +79,61 @@ exports.handler = async (event, context) => {
       
       console.log('Parsed Request:', { method: mockReq.method, url: mockReq.url });
 
-    const mockRes = {
-      statusCode: 200,
-      headers: {},
-      body: '',
-      setHeader: function(key, value) {
-        this.headers[key] = value;
-      },
-      writeHead: function(code, headers) {
-        this.statusCode = code;
-        if (headers) Object.assign(this.headers, headers);
-      },
-      end: function(data) {
-        this.body = data || '';
-        resolve({
-          statusCode: this.statusCode,
-          headers: this.headers,
-          body: this.body,
-          isBase64Encoded: false
-        });
-      }
-    };
-
-    cors(mockReq, mockRes, () => {
-      try {
-        if (mockReq.url.startsWith('/api/')) {
-          const pathname = mockReq.url.split('?')[0];
-          const method = mockReq.method;
-          
-          const authHandled = handleAuthRoutes(mockReq, mockRes, pathname, method);
-          if (authHandled === true) return;
-
-          const parkingHandled = parkingRoutes(mockReq, mockRes);
-          if (parkingHandled !== null) return;
-
-          const adminHandled = adminRoutes(mockReq, mockRes);
-          if (adminHandled !== null) return;
-
-          mockRes.writeHead(404, { 'Content-Type': 'application/json' });
-          mockRes.end(JSON.stringify({ error: 'Route not found' }));
-          return;
+      const mockRes = {
+        statusCode: 200,
+        headers: {},
+        body: '',
+        setHeader: function(key, value) {
+          this.headers[key] = value;
+        },
+        writeHead: function(code, headers) {
+          this.statusCode = code;
+          if (headers) Object.assign(this.headers, headers);
+        },
+        end: function(data) {
+          this.body = data || '';
+          resolve({
+            statusCode: this.statusCode,
+            headers: this.headers,
+            body: this.body,
+            isBase64Encoded: false
+          });
         }
+      };
 
-        // Lambda doesn't serve static files - frontend is on GitHub Pages
-        mockRes.writeHead(404, { 'Content-Type': 'application/json' });
-        mockRes.end(JSON.stringify({ error: 'Static files served from GitHub Pages' }));
-      } catch (error) {
-        console.error('Error in route handler:', error);
-        mockRes.writeHead(500, { 'Content-Type': 'application/json' });
-        mockRes.end(JSON.stringify({ error: error.message }));
-      }
-    });
+      cors(mockReq, mockRes, () => {
+        try {
+          if (mockReq.url.startsWith('/api/')) {
+            const pathname = mockReq.url.split('?')[0];
+            const method = mockReq.method;
+            
+            const authHandled = handleAuthRoutes(mockReq, mockRes, pathname, method);
+            if (authHandled === true) return;
+
+            const parkingHandled = parkingRoutes(mockReq, mockRes);
+            if (parkingHandled !== null) return;
+
+            const adminHandled = adminRoutes(mockReq, mockRes);
+            if (adminHandled !== null) return;
+
+            mockRes.writeHead(404, { 'Content-Type': 'application/json' });
+            mockRes.end(JSON.stringify({ error: 'Route not found' }));
+            return;
+          }
+
+          // Lambda doesn't serve static files - frontend is on GitHub Pages
+          mockRes.writeHead(404, { 'Content-Type': 'application/json' });
+          mockRes.end(JSON.stringify({ error: 'Static files served from GitHub Pages' }));
+        } catch (error) {
+          console.error('Error in route handler:', error);
+          mockRes.writeHead(500, { 'Content-Type': 'application/json' });
+          mockRes.end(JSON.stringify({ error: error.message }));
+        }
+      });
+    } catch (error) {
+      console.error('Lambda handler error:', error);
+      reject(error);
+    }
   });
 };
 
