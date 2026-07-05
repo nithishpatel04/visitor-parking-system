@@ -114,7 +114,9 @@ exports.handler = async (event, context) => {
         return;
       }
 
-      serveStatic(mockReq, mockRes);
+      // Lambda doesn't serve static files - frontend is on GitHub Pages
+      mockRes.writeHead(404, { 'Content-Type': 'application/json' });
+      mockRes.end(JSON.stringify({ error: 'Static files served from GitHub Pages' }));
     });
   });
 };
