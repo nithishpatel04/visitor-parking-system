@@ -66,12 +66,23 @@ exports.handler = async (event, context) => {
   }
 
   return new Promise((resolve, reject) => {
+    // Debug logging
+    console.log('Event:', JSON.stringify({
+      path: event.path,
+      rawPath: event.rawPath,
+      requestContextPath: event.requestContext?.path,
+      httpMethod: event.httpMethod,
+      resource: event.resource
+    }, null, 2));
+
     const mockReq = {
       method: event.httpMethod || 'GET',
       url: event.path || event.rawPath || event.requestContext?.path || '/',
       headers: event.headers || {},
       body: event.body || ''
     };
+    
+    console.log('Request URL:', mockReq.url);
 
     const mockRes = {
       statusCode: 200,
