@@ -1,5 +1,5 @@
 // API Base URL - Update this to your API Gateway URL
-const BASE_URL = 'https://moyslzy49b.execute-api.us-east-1.amazonaws.com/prod';
+const BASE_URL = 'https://r4muckg5ej.execute-api.us-east-1.amazonaws.com/prod';
 
 async function requestJson(url, options = {}) {
   const token = localStorage.getItem('authToken');
