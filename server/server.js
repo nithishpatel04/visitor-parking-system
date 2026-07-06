@@ -4,6 +4,12 @@ const path = require('path');
 
 // Lambda handler export (for AWS Lambda)
 exports.handler = async (event, context) => {
+  console.log('=== REQUEST EVENT ===');
+  console.log('Method:', event.httpMethod);
+  console.log('Path:', event.path || event.rawPath);
+  console.log('Body:', event.body);
+  console.log('==================');
+
   // Lazy load modules inside handler to avoid ES module resolution issues
   const cors = require('./middleware/cors');
   const parkingRoutes = require('./routes/parkingRoutes');
