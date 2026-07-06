@@ -1,12 +1,10 @@
-const { readData } = require('./storage');
-
 function getMonthKey(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 }
 
-function countPassesForMonth(building, unit, date = new Date()) {
-  const state = readData();
+function countPassesForMonth(state, building, unit, date = new Date()) {
   const key = getMonthKey(date);
+  if (!state || !state.passes) return 0;
   return state.passes.reduce((total, pass) => {
     const passDate = new Date(pass.createdAt);
     if (pass.building !== building || pass.unit !== unit || getMonthKey(passDate) !== key) {
@@ -17,11 +15,11 @@ function countPassesForMonth(building, unit, date = new Date()) {
   }, 0);
 }
 
-function getUnitsAtLimit(date = new Date()) {
-  const state = readData();
+function getUnitsAtLimit(state, date = new Date()) {
   const key = getMonthKey(date);
   const buckets = new Map();
 
+  if (!state || !state.passes) return [];
   state.passes.forEach((pass) => {
     const passDate = new Date(pass.createdAt);
     if (getMonthKey(passDate) !== key) {

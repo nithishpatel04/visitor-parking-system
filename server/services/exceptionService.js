@@ -16,8 +16,8 @@ function hasActiveException(entry) {
   return new Date(entry.expiresAt) > new Date();
 }
 
-function isExceptionEnabled(building, unit) {
-  const state = readData();
+function isExceptionEnabled(state, building, unit) {
+  if (!state || !state.exceptions) return false;
   const entry = getExceptionEntry(state, building, unit);
   return hasActiveException(entry);
 }
@@ -69,14 +69,20 @@ function setException(building, unit, enabled, reason = '', days = 0) {
   };
 }
 
-function getExceptions() {
-  const state = readData();
-  return state.exceptions;
+function getExceptions(state) {
+  if (!state) {
+    const { readData } = require('./storage');
+    state = readData();
+  }
+  return state.exceptions || [];
 }
 
-function getExceptionHistory() {
-  const state = readData();
-  return state.exceptionHistory;
+function getExceptionHistory(state) {
+  if (!state) {
+    const { readData } = require('./storage');
+    state = readData();
+  }
+  return state.exceptionHistory || [];
 }
 
 module.exports = {

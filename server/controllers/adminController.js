@@ -1,5 +1,4 @@
 const { readData, writeData } = require('../services/storage');
-const { countPassesForMonth } = require('../services/passCounter');
 const { setException, getExceptions, getExceptionHistory } = require('../services/exceptionService');
 
 function buildUnitReport(state, date = new Date()) {
@@ -38,7 +37,7 @@ function getAdminSummary(req, res) {
       const state = await readData();
       const report = buildUnitReport(state);
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ report, exceptions: getExceptions(), history: getExceptionHistory() }));
+      res.end(JSON.stringify({ report, exceptions: getExceptions(state), history: getExceptionHistory(state) }));
     } catch (error) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Failed to fetch admin data' }));

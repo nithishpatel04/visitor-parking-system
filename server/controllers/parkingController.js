@@ -33,7 +33,7 @@ function getSummary(state, date = new Date()) {
   return {
     todayPasses: todayPasses.length,
     activePasses: activePasses.length,
-    unitsAtLimit: getUnitsAtLimit(date).length,
+    unitsAtLimit: getUnitsAtLimit(state, date).length,
     exceptionsThisMonth: exceptionCount
   };
 }
@@ -107,9 +107,9 @@ async function createPass(req, res) {
 
     const state = await readData();
     console.log('State read from storage');
-    const monthlyDaysUsed = countPassesForMonth(building, unit);
+    const monthlyDaysUsed = countPassesForMonth(state, building, unit);
     console.log('Monthly days used:', monthlyDaysUsed);
-    const hasException = isExceptionEnabled(building, unit);
+    const hasException = isExceptionEnabled(state, building, unit);
     console.log('Has exception:', hasException);
     const overnightDays = Math.max(0, durationValue);
     if (monthlyDaysUsed + overnightDays > 10 && !hasException) {
