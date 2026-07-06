@@ -77,22 +77,29 @@ function listPasses(req, res, query) {
 async function createPass(req, res) {
   try {
     const payload = await parseBody(req);
+    console.log('=== CREATE PASS ===');
+    console.log('Payload:', JSON.stringify(payload));
+    
     const { building, unit, resident, plate, vehicle, color, duration, authorizedBy } = payload;
 
     if (!building || !unit || !resident || !plate || !vehicle || !color || duration === undefined || duration === null || !authorizedBy) {
+      console.log('Missing fields check failed');
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Please fill out every field before saving the pass.' }));
       return;
     }
 
     if (!['2 Sonic', '6 Sonic'].includes(building)) {
+      console.log('Invalid building:', building);
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Building must be 2 Sonic or 6 Sonic.' }));
       return;
     }
 
     const durationValue = Number(duration);
+    console.log('Duration value:', durationValue, 'Type:', typeof durationValue);
     if (!Number.isInteger(durationValue) || durationValue < 0 || durationValue > 3) {
+      console.log('Invalid duration:', durationValue);
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Duration must be between 0 and 3 days. Use 0 for day-time parking until 11:59 PM.' }));
       return;
