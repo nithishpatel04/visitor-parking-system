@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Visitor Parking Dashboard</title>
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Parking management</p>
+        <h1>Visitor Parking Dashboard</h1>
+      </div>
+      <nav class="nav-links">
+        <a href="parking.html" class="primary-btn">New Parking Pass</a>
+        <a href="admin.html">Admin</a>
+        <button id="logoutBtn" class="secondary-btn" style="background: none; color: inherit; cursor: pointer; text-decoration: underline;">Logout</button>
+      </nav>
+    </header>
+
+    <main class="dashboard-shell">
+      <section class="panel controls-panel">
+        <div class="panel-header">
+          <h2>Search and Filter</h2>
+          <button id="clearSearch" class="secondary-btn">Clear Search</button>
+        </div>
+        <div class="filters-grid">
+          <label>
+            Plate
+            <input id="plateSearch" type="text" placeholder="Search by plate" />
+          </label>
+          <label>
+            Building
+            <select id="buildingFilter">
+              <option value="">All buildings</option>
+              <option value="2 Sonic">2 Sonic</option>
+              <option value="6 Sonic">6 Sonic</option>
+            </select>
+          </label>
+          <label>
+            Unit
+            <input id="unitSearch" type="text" placeholder="Search by unit" />
+          </label>
+          <label>
+            From
+            <input id="fromDate" type="date" />
+          </label>
+          <label>
+            To
+            <input id="toDate" type="date" />
+          </label>
+          <button id="applySearch" class="primary-btn">Apply Filters</button>
+        </div>
+      </section>
+
+      <section class="summary-grid">
+        <article class="summary-card">
+          <span class="summary-label">Today's Passes</span>
+          <strong id="todayPasses">0</strong>
+        </article>
+        <article class="summary-card">
+          <span class="summary-label">Active Passes</span>
+          <strong id="activePasses">0</strong>
+        </article>
+        <article class="summary-card">
+          <span class="summary-label">Units at Limit</span>
+          <strong id="unitsAtLimit">0</strong>
+        </article>
+        <article class="summary-card">
+          <span class="summary-label">Exceptions This Month</span>
+          <strong id="exceptionsThisMonth">0</strong>
+        </article>
+      </section>
+
+      <section class="panel table-panel">
+        <div class="panel-header">
+          <h2>Parking History</h2>
+          <p>Displays every parking pass for the current month and search filters.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Building</th>
+                <th>Unit</th>
+                <th>Resident</th>
+                <th>Plate</th>
+                <th>Vehicle</th>
+                <th>Color</th>
+                <th>Days Used</th>
+                <th>Expiry</th>
+                <th>Status</th>
+                <th>Authorized By</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/table.js"></script>
+    <script src="js/dashboard.js"></script>
+  </body>
+</html>
