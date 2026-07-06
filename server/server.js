@@ -124,19 +124,29 @@ exports.handler = async (event, context) => {
     };
 
     cors(mockReq, mockRes, () => {
+      console.log('=== ROUTING ===');
+      console.log('URL:', mockReq.url);
+      console.log('Starts with /api/:', mockReq.url.startsWith('/api/'));
+      
       if (mockReq.url.startsWith('/api/')) {
         const pathname = mockReq.url.split('?')[0];
         const method = mockReq.method;
         
+        console.log('API Route - pathname:', pathname, 'method:', method);
+        
         const authHandled = handleAuthRoutes(mockReq, mockRes, pathname, method);
+        console.log('Auth route handled:', authHandled);
         if (authHandled === true) return;
 
         const parkingHandled = parkingRoutes(mockReq, mockRes);
+        console.log('Parking route handled:', parkingHandled);
         if (parkingHandled !== null) return;
 
         const adminHandled = adminRoutes(mockReq, mockRes);
+        console.log('Admin route handled:', adminHandled);
         if (adminHandled !== null) return;
 
+        console.log('=== NO ROUTE MATCHED - RETURNING 404 ===');
         mockRes.writeHead(404, { 'Content-Type': 'application/json' });
         mockRes.end(JSON.stringify({ error: 'Route not found' }));
         return;
