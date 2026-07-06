@@ -17,7 +17,7 @@ function parseBody(req) {
   });
 }
 
-async function handleAuthRoutes(req, res, pathname, method) {
+function handleAuthRoutes(req, res, pathname, method) {
   // POST /api/auth/login
   if (pathname === '/api/auth/login' && method === 'POST') {
     parseBody(req).then(async payload => {
