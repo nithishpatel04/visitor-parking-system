@@ -106,8 +106,11 @@ async function createPass(req, res) {
     }
 
     const state = await readData();
+    console.log('State read from storage');
     const monthlyDaysUsed = countPassesForMonth(building, unit);
+    console.log('Monthly days used:', monthlyDaysUsed);
     const hasException = isExceptionEnabled(building, unit);
+    console.log('Has exception:', hasException);
     const overnightDays = Math.max(0, durationValue);
     if (monthlyDaysUsed + overnightDays > 10 && !hasException) {
       res.writeHead(409, { 'Content-Type': 'application/json' });
@@ -137,11 +140,14 @@ async function createPass(req, res) {
     };
 
     state.passes.push(pass);
+    console.log('Pass object created, writing to storage');
     await writeData(state);
+    console.log('Pass written successfully');
 
     res.writeHead(201, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ pass, message: 'Parking pass created successfully.' }));
   } catch (error) {
+    console.error('ERROR in createPass:', error.message, error.stack);
     res.writeHead(400, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Could not save the form data.' }));
   }
