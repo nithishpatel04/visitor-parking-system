@@ -10,11 +10,8 @@ exports.handler = async (event, context) => {
   console.log('Body:', event.body);
   console.log('==================');
 
-  // Lazy load modules inside handler to avoid ES module resolution issues
+  // Lazy load only the middleware up front; route modules are loaded on demand.
   const cors = require('./middleware/cors');
-  const parkingRoutes = require('./routes/parkingRoutes');
-  const adminRoutes = require('./routes/adminRoutes');
-  const { handleAuthRoutes } = require('./routes/authRoutes');
 
   const clientDir = path.join(__dirname, '..', 'client');
 
@@ -124,35 +121,28 @@ exports.handler = async (event, context) => {
     };
 
     cors(mockReq, mockRes, () => {
-      console.log('=== ROUTING ===');
-      console.log('URL:', mockReq.url);
-      console.log('Starts with /api/:', mockReq.url.startsWith('/api/'));
-      
-      if (mockReq.url.startsWith('/api/')) {
-        const pathname = mockReq.url.split('?')[0];
-        const method = mockReq.method;
-        
-        console.log('API Route - pathname:', pathname, 'method:', method);
-        
-        const authHandled = handleAuthRoutes(mockReq, mockRes, pathname, method);
-        console.log('Auth route handled:', authHandled);
-        if (authHandled === true) return;
-
-        const parkingHandled = parkingRoutes(mockReq, mockRes);
-        console.log('Parking route handled:', parkingHandled);
-        if (parkingHandled !== null) return;
-
-        const adminHandled = adminRoutes(mockReq, mockRes);
-        console.log('Admin route handled:', adminHandled);
-        if (adminHandled !== null) return;
-
-        console.log('=== NO ROUTE MATCHED - RETURNING 404 ===');
-        mockRes.writeHead(404, { 'Content-Type': 'application/json' });
-        mockRes.end(JSON.stringify({ error: 'Route not found' }));
+      if (!mockReq.url.startsWith('/api/')) {
+        serveStatic(mockReq, mockRes);
         return;
       }
 
-      serveStatic(mockReq, mockRes);
+      const pathname = mockReq.url.split('?')[0];
+      const method = mockReq.method;
+      const { handleAuthRoutes } = require('./routes/authRoutes');
+
+      const authHandled = handleAuthRoutes(mockReq, mockRes, pathname, method);
+      if (authHandled === true) return;
+
+      const parkingRoutes = require('./routes/parkingRoutes');
+      const parkingHandled = parkingRoutes(mockReq, mockRes);
+      if (parkingHandled !== null) return;
+
+      const adminRoutes = require('./routes/adminRoutes');
+      const adminHandled = adminRoutes(mockReq, mockRes);
+      if (adminHandled !== null) return;
+
+      mockRes.writeHead(404, { 'Content-Type': 'application/json' });
+      mockRes.end(JSON.stringify({ error: 'Route not found' }));
     });
   });
 };

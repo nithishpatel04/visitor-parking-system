@@ -3,9 +3,34 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('loginForm');
   const message = document.getElementById('message');
   const loading = document.querySelector('.loading');
+  const submitButton = form.querySelector('button[type="submit"]');
+  const buttonTextNode = submitButton ? submitButton.childNodes[submitButton.childNodes.length - 1] : null;
+  let isSubmitting = false;
+
+  // Warm API during credential entry to reduce first-login wait from cold starts.
+  fetch(`${BASE_URL}/api/auth/verify`, {
+    method: 'GET'
+  }).catch(() => {});
+
+  function setLoadingState(loadingState) {
+    if (!submitButton) return;
+
+    submitButton.disabled = loadingState;
+    submitButton.style.opacity = loadingState ? '0.75' : '1';
+    submitButton.style.cursor = loadingState ? 'not-allowed' : 'pointer';
+    loading.classList.toggle('show', loadingState);
+
+    if (buttonTextNode && buttonTextNode.nodeType === Node.TEXT_NODE) {
+      buttonTextNode.textContent = loadingState ? 'Signing in...' : 'Login';
+    }
+  }
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
+
+    if (isSubmitting) {
+      return;
+    }
     
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
@@ -15,7 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    loading.classList.add('show');
+    isSubmitting = true;
+    setLoadingState(true);
 
     try {
       const response = await fetch(`${BASE_URL}/api/auth/login`, {
@@ -37,14 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('authUser', JSON.stringify(data.user));
 
       showMessage('Login successful! Redirecting...', 'success');
-      
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 500);
+      window.location.href = 'index.html';
     } catch (error) {
       showMessage(error.message || 'Login failed. Please try again.', 'error');
     } finally {
-      loading.classList.remove('show');
+      isSubmitting = false;
+      setLoadingState(false);
     }
   });
 
