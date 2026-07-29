@@ -10,9 +10,10 @@ function handleAuthFailure(statusCode) {
 
 async function requestJson(url, options = {}) {
   const token = localStorage.getItem('authToken');
+  const optionHeaders = options.headers || {};
   const headers = {
     Accept: 'application/json',
-    ...(options.headers || {})
+    ...optionHeaders
   };
 
   if (token) {
@@ -21,8 +22,8 @@ async function requestJson(url, options = {}) {
 
   const fullUrl = url.startsWith('http') ? url : `${BASE_URL}${url}`;
   const response = await fetch(fullUrl, {
-    headers,
-    ...options
+    ...options,
+    headers
   });
 
   const data = await response.json().catch(() => ({}));
