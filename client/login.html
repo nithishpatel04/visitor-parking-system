@@ -3,84 +3,71 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Login - Parking Management System</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+    <title>SONIC Security Operations Login</title>
+    <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/login.css" />
+  </head>
+  <body>
+    <main class="login-shell">
+      <section class="login-card">
+        <div class="login-header">
+          <div class="logo-mark" aria-hidden="true">S</div>
+          <div>
+            <h1>SONIC</h1>
+            <p>Security Operations Management</p>
+          </div>
+        </div>
 
-      body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-            <title>SONIC Security Operations Login</title>
-            <link rel="stylesheet" href="css/shared.css" />
-            <link rel="stylesheet" href="css/login.css" />
-            placeholder="Enter your username"
-            required
-            <main class="login-shell">
-              <section class="login-card">
-                <div class="login-header">
-                  <div class="logo-mark" aria-hidden="true">S</div>
-                  <div>
-                    <h1>SONIC</h1>
-                    <p>Security Operations Management</p>
-                  </div>
-                </div>
+        <p class="login-intro">Sign in to manage visitor parking, incident reports, and shift logs from one workspace.</p>
 
-                <p class="login-intro">Sign in to manage visitor parking, incident reports, and shift logs from one workspace.</p>
+        <form id="loginForm" novalidate>
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Enter your username"
+              required
+              autocomplete="username"
+            />
+          </div>
 
-                <form id="loginForm" novalidate>
-                  <div class="form-group">
-                    <label for="username">Username</label>
-                    <input
-                      type="text"
-                      id="username"
-                      name="username"
-                      placeholder="Enter your username"
-                      required
-                      autocomplete="username"
-                    />
-                  </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              required
+              autocomplete="current-password"
+            />
+          </div>
 
-                  <div class="form-group">
-                    <label for="password">Password</label>
-                    <input
-                      type="password"
-                      id="password"
-                      name="password"
-                      placeholder="Enter your password"
-                      required
-                      autocomplete="current-password"
-                    />
-                  </div>
+          <button type="submit" class="login-button">
+            <span class="loading" aria-hidden="true"></span>Sign In
+          </button>
+        </form>
 
-                  <button type="submit" class="login-button">
-                    <span class="loading" aria-hidden="true"></span>Sign In
-                  </button>
-                </form>
+        <div id="message" class="form-message" aria-live="polite"></div>
 
-                <div id="message" class="form-message" aria-live="polite"></div>
+        <section class="demo-info" aria-label="Demo credentials">
+          <h2>Demo Accounts</h2>
+          <ul class="demo-creds">
+            <li><span class="role-tag">Concierge</span><span>concierge / 1234</span></li>
+            <li><span class="role-tag">Manager</span><span>manager / 1234</span></li>
+            <li><span class="role-tag">Admin</span><span>admin / 1234</span></li>
+          </ul>
+        </section>
+      </section>
 
-                <section class="demo-info" aria-label="Demo credentials">
-                  <h2>Demo Accounts</h2>
-                  <ul class="demo-creds">
-                    <li><span class="role-tag">Concierge</span><span>concierge / 1234</span></li>
-                    <li><span class="role-tag">Manager</span><span>manager / 1234</span></li>
-                    <li><span class="role-tag">Admin</span><span>admin / 1234</span></li>
-                  </ul>
-                </section>
-              </section>
+      <aside class="login-side-note" aria-hidden="true">
+        <h2>Operations Snapshot</h2>
+        <p>Track pass usage, submit incidents with attachments, and review shift logs with role-based access.</p>
+      </aside>
+    </main>
 
-              <aside class="login-side-note" aria-hidden="true">
-                <h2>Operations Snapshot</h2>
-                <p>Track pass usage, submit incidents with attachments, and review shift logs with role-based access.</p>
-              </aside>
-            </main>
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    <script src="js/login.js?v=5"></script>
+  </body>
+</html>
