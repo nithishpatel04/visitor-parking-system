@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/shared.css" />
     <link rel="stylesheet" href="css/sidebar.css" />
     <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/parking.css" />
   </head>
   <body data-page="incidents">
     <div class="app-layout">
@@ -45,11 +46,55 @@
           <button type="button" class="sidebar-toggle" data-sidebar-toggle>Menu</button>
         </header>
 
-        <main class="dashboard-shell">
+        <main class="form-shell">
+          <section class="panel" id="incidentFormPanel">
+            <div class="panel-header">
+              <div>
+                <h2 id="incidentFormHeading">Create New Incident Report</h2>
+                <p>Drafts can be saved and reopened later. Attachments are only for incident reports.</p>
+              </div>
+            </div>
+            <form id="incidentForm" class="parking-form incident-form">
+              <input type="hidden" id="incidentId" />
+              <label>
+                Title
+                <input id="incidentTitle" type="text" required placeholder="Brief incident summary" />
+              </label>
+              <label>
+                Incident Type
+                <select id="incidentType" required></select>
+              </label>
+              <label>
+                Unit Affected
+                <input id="incidentUnitAffected" type="text" placeholder="S2511, Lobby, Common Area" />
+              </label>
+              <label>
+                Submitted By
+                <input id="incidentSubmittedBy" type="text" required placeholder="Officer name" />
+              </label>
+              <label>
+                Officers Involved
+                <input id="incidentOfficersInvolved" type="text" placeholder="Optional, multiple names allowed" />
+              </label>
+              <label class="full-width">
+                Incident Report
+                <textarea id="incidentReportText" rows="12" required placeholder="Enter the complete incident details here."></textarea>
+              </label>
+              <label class="full-width">
+                Attachment
+                <input id="incidentAttachment" type="file" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" />
+              </label>
+              <p id="incidentDraftState" class="status-message">Draft not saved yet.</p>
+              <div class="form-actions">
+                <button type="button" class="secondary-btn" id="saveIncidentDraftBtn">Save Draft</button>
+                <button type="button" class="primary-btn" id="submitIncidentBtn">Submit Incident Report</button>
+              </div>
+            </form>
+          </section>
+
           <section class="panel controls-panel">
             <div class="panel-header">
-              <h2>Incident Reports</h2>
-              <button class="primary-btn" type="button" id="createIncidentBtn">Create New Incident Report</button>
+              <h2>Incident Report History Filter</h2>
             </div>
             <div class="filters-grid">
               <label>
@@ -105,51 +150,6 @@
             </div>
           </section>
 
-          <section class="panel" id="incidentFormPanel" hidden>
-            <div class="panel-header">
-              <div>
-                <h2 id="incidentFormHeading">Create New Incident Report</h2>
-                <p>Drafts can be saved and reopened later. Attachments are only for incident reports.</p>
-              </div>
-              <button type="button" class="secondary-btn" id="closeIncidentFormBtn">Close</button>
-            </div>
-            <form id="incidentForm" class="parking-form incident-form">
-              <input type="hidden" id="incidentId" />
-              <label>
-                Title
-                <input id="incidentTitle" type="text" required placeholder="Brief incident summary" />
-              </label>
-              <label>
-                Incident Type
-                <select id="incidentType" required></select>
-              </label>
-              <label>
-                Unit Affected
-                <input id="incidentUnitAffected" type="text" placeholder="S2511, Lobby, Common Area" />
-              </label>
-              <label>
-                Submitted By
-                <input id="incidentSubmittedBy" type="text" required placeholder="Officer name" />
-              </label>
-              <label>
-                Officers Involved
-                <input id="incidentOfficersInvolved" type="text" placeholder="Optional, multiple names allowed" />
-              </label>
-              <label class="full-width">
-                Incident Report
-                <textarea id="incidentReportText" rows="12" required placeholder="Enter the complete incident details here."></textarea>
-              </label>
-              <label class="full-width">
-                Attachment
-                <input id="incidentAttachment" type="file" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" />
-              </label>
-              <p id="incidentDraftState" class="status-message">Draft not saved yet.</p>
-              <div class="form-actions">
-                <button type="button" class="secondary-btn" id="saveIncidentDraftBtn">Save Draft</button>
-                <button type="button" class="primary-btn" id="submitIncidentBtn">Submit Incident Report</button>
-              </div>
-            </form>
-          </section>
         </main>
       </div>
     </div>

@@ -1,0 +1,25 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DynamoDbAccessForParkingApp",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:Scan",
+        "dynamodb:Query"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:us-east-1:747613411593:table/parking-passes",
+        "arn:aws:dynamodb:us-east-1:747613411593:table/parking-sessions",
+        "arn:aws:dynamodb:us-east-1:747613411593:table/parking-exceptions",
+        "arn:aws:dynamodb:us-east-1:747613411593:table/shift-logs",
+        "arn:aws:dynamodb:us-east-1:747613411593:table/incident-reports",
+        "arn:aws:dynamodb:us-east-1:747613411593:table/notifications"
+      ]
+    }
+  ]
+}

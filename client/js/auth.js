@@ -1,5 +1,5 @@
 // Client-side authentication helper
-const BASE_URL = 'https://r4muckg5ej.execute-api.us-east-1.amazonaws.com/prod';
+const AUTH_BASE_URL = 'https://r4muckg5ej.execute-api.us-east-1.amazonaws.com/prod';
 
 function checkAuthentication() {
   const token = localStorage.getItem('authToken');
@@ -55,7 +55,7 @@ function logout() {
 
   // Notify server about logout
   if (token) {
-    fetch(`${BASE_URL}/api/auth/logout`, {
+    fetch(`${AUTH_BASE_URL}/api/auth/logout`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token })

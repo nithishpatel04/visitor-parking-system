@@ -156,7 +156,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showForm(record = null) {
-    formPanel.hidden = false;
+    if (Object.prototype.hasOwnProperty.call(formPanel, 'hidden')) {
+      formPanel.hidden = false;
+    }
     currentRecord = record;
     idField.value = record?.id || '';
     populateForm(record);
@@ -165,7 +167,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function hideForm() {
-    formPanel.hidden = true;
+    if (Object.prototype.hasOwnProperty.call(formPanel, 'hidden')) {
+      formPanel.hidden = true;
+    }
   }
 
   async function persistDraft() {
@@ -274,13 +278,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  createButton.addEventListener('click', () => {
-    currentRecord = null;
-    idField.value = '';
-    showForm(null);
-  });
+  if (createButton) {
+    createButton.addEventListener('click', () => {
+      currentRecord = null;
+      idField.value = '';
+      showForm(null);
+    });
+  }
 
-  closeButton.addEventListener('click', hideForm);
+  if (closeButton) {
+    closeButton.addEventListener('click', hideForm);
+  }
   draftButton.addEventListener('click', persistDraft);
   submitButton.addEventListener('click', submitReport);
   printButton.addEventListener('click', () => window.print());

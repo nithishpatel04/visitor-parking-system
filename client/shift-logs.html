@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/shared.css" />
     <link rel="stylesheet" href="css/sidebar.css" />
     <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/parking.css" />
   </head>
   <body data-page="shift-logs">
     <div class="app-layout">
@@ -45,66 +46,13 @@
           <button type="button" class="sidebar-toggle" data-sidebar-toggle>Menu</button>
         </header>
 
-        <main class="dashboard-shell">
-          <section class="panel controls-panel">
-            <div class="panel-header">
-              <h2>Security Shift Logs</h2>
-              <button class="primary-btn" type="button" id="createShiftLogBtn">Create Shift Log</button>
-            </div>
-            <div class="filters-grid">
-              <label>
-                Search
-                <input id="shiftSearch" type="text" placeholder="Title, officer, building, shift" />
-              </label>
-              <label>
-                Date From
-                <input id="shiftFrom" type="date" />
-              </label>
-              <label>
-                Date To
-                <input id="shiftTo" type="date" />
-              </label>
-              <label>
-                Status
-                <select id="shiftStatusFilter">
-                  <option value="">All statuses</option>
-                  <option value="Draft">Draft</option>
-                  <option value="Submitted">Submitted</option>
-                </select>
-              </label>
-              <button class="secondary-btn" type="button" id="clearShiftFilters">Clear Filters</button>
-            </div>
-          </section>
-
-          <section class="panel table-panel">
-            <div class="panel-header">
-              <h2>Security Shift Logs</h2>
-              <p>Created By shows Officer Name 1 and Officer Name 2 when entered.</p>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Created By</th>
-                    <th>Status</th>
-                    <th>View</th>
-                  </tr>
-                </thead>
-                <tbody id="shiftLogRows">
-                  <tr><td colspan="4">Loading shift logs...</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section class="panel" id="shiftLogFormPanel" hidden>
+        <main class="form-shell">
+          <section class="panel" id="shiftLogFormPanel">
             <div class="panel-header">
               <div>
                 <h2 id="shiftLogFormHeading">Create Shift Log</h2>
                 <p>Enter the complete shift report below. Drafts can be reopened and edited later.</p>
               </div>
-              <button type="button" class="secondary-btn" id="closeShiftFormBtn">Close</button>
             </div>
             <form id="shiftLogForm" class="parking-form shift-log-form">
               <input type="hidden" id="shiftLogId" />
@@ -186,6 +134,58 @@
               </div>
             </form>
           </section>
+
+          <section class="panel controls-panel">
+            <div class="panel-header">
+              <h2>Shift Log History Filter</h2>
+            </div>
+            <div class="filters-grid">
+              <label>
+                Search
+                <input id="shiftSearch" type="text" placeholder="Title, officer, building, shift" />
+              </label>
+              <label>
+                Date From
+                <input id="shiftFrom" type="date" />
+              </label>
+              <label>
+                Date To
+                <input id="shiftTo" type="date" />
+              </label>
+              <label>
+                Status
+                <select id="shiftStatusFilter">
+                  <option value="">All statuses</option>
+                  <option value="Draft">Draft</option>
+                  <option value="Submitted">Submitted</option>
+                </select>
+              </label>
+              <button class="secondary-btn" type="button" id="clearShiftFilters">Clear Filters</button>
+            </div>
+          </section>
+
+          <section class="panel table-panel">
+            <div class="panel-header">
+              <h2>Security Shift Logs</h2>
+              <p>Created By shows Officer Name 1 and Officer Name 2 when entered.</p>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Created By</th>
+                    <th>Status</th>
+                    <th>View</th>
+                  </tr>
+                </thead>
+                <tbody id="shiftLogRows">
+                  <tr><td colspan="4">Loading shift logs...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
         </main>
       </div>
     </div>

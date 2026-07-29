@@ -96,6 +96,69 @@
         </form>
         <p id="formMessage" class="status-message" aria-live="polite"></p>
       </section>
+
+      <section class="panel controls-panel">
+        <div class="panel-header">
+          <h2>Parking Pass History Filter</h2>
+          <button id="clearSearch" class="secondary-btn" type="button">Clear Search</button>
+        </div>
+        <div class="filters-grid">
+          <label>
+            Plate
+            <input id="plateSearch" type="text" placeholder="Search by plate" />
+          </label>
+          <label>
+            Building
+            <select id="buildingFilter">
+              <option value="">All buildings</option>
+              <option value="2 Sonic">2 Sonic</option>
+              <option value="6 Sonic">6 Sonic</option>
+            </select>
+          </label>
+          <label>
+            Unit
+            <input id="unitSearch" type="text" placeholder="Search by unit" />
+          </label>
+          <label>
+            From
+            <input id="fromDate" type="date" />
+          </label>
+          <label>
+            To
+            <input id="toDate" type="date" />
+          </label>
+          <button id="applySearch" class="primary-btn" type="button">Apply Filters</button>
+        </div>
+      </section>
+
+      <section class="panel table-panel">
+        <div class="panel-header">
+          <h2>Parking History</h2>
+          <p>Displays every parking pass for the current month and filter result.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Building</th>
+                <th>Unit</th>
+                <th>Resident</th>
+                <th>Plate</th>
+                <th>Vehicle</th>
+                <th>Color</th>
+                <th>Days Used</th>
+                <th>Expiry</th>
+                <th>Status</th>
+                <th>Authorized By</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody">
+              <tr><td colspan="11">Loading passes...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
       </main>
       </div>
     </div>
@@ -103,6 +166,8 @@
     <script src="js/auth.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/table.js"></script>
     <script src="js/validation.js"></script>
     <script src="js/parking.js"></script>
     <script src="js/navigation.js"></script>
