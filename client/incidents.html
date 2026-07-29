@@ -47,12 +47,20 @@
         </header>
 
         <main class="form-shell">
-          <section class="panel" id="incidentFormPanel">
+          <section class="panel controls-panel">
+            <div class="panel-header">
+              <h2>Incident Reports</h2>
+              <button class="primary-btn" type="button" id="createIncidentBtn" aria-controls="incidentFormPanel" aria-expanded="false">Create New Incident Report</button>
+            </div>
+          </section>
+
+          <section class="panel" id="incidentFormPanel" hidden>
             <div class="panel-header">
               <div>
                 <h2 id="incidentFormHeading">Create New Incident Report</h2>
                 <p>Drafts can be saved and reopened later. Attachments are only for incident reports.</p>
               </div>
+              <button type="button" class="secondary-btn" id="closeIncidentFormBtn">Close</button>
             </div>
             <form id="incidentForm" class="parking-form incident-form">
               <input type="hidden" id="incidentId" />

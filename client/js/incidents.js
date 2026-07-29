@@ -120,16 +120,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (Object.prototype.hasOwnProperty.call(formPanel, 'hidden')) {
       formPanel.hidden = false;
     }
+    if (createButton) {
+      createButton.setAttribute('aria-expanded', 'true');
+    }
     currentRecord = record;
     idField.value = record?.id || '';
     populateForm(record);
     applyReadOnlyState(record?.status === 'Submitted' || record?.status === 'Viewed by PM');
     formPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const firstField = form.querySelector('input:not([type="hidden"]), select, textarea, button');
+    if (firstField) {
+      firstField.focus();
+    }
   }
 
   function hideForm() {
     if (Object.prototype.hasOwnProperty.call(formPanel, 'hidden')) {
       formPanel.hidden = true;
+    }
+    if (createButton) {
+      createButton.setAttribute('aria-expanded', 'false');
+      createButton.focus();
     }
   }
 
@@ -288,6 +299,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (closeButton) {
     closeButton.addEventListener('click', hideForm);
   }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !formPanel.hidden) {
+      hideForm();
+    }
+  });
   draftButton.addEventListener('click', saveDraft);
   submitButton.addEventListener('click', submitIncidentReport);
 
@@ -347,6 +364,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (backup) {
     showForm({ ...backup, status: 'Draft' });
     draftState.textContent = 'Recovered unsaved draft from local backup.';
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('action') === 'create' && !backup) {
+    showForm(null);
   }
 
   renderIncidents();

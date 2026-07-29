@@ -47,12 +47,20 @@
         </header>
 
         <main class="form-shell">
-          <section class="panel" id="shiftLogFormPanel">
+          <section class="panel controls-panel">
+            <div class="panel-header">
+              <h2>Security Shift Logs</h2>
+              <button class="primary-btn" type="button" id="createShiftLogBtn" aria-controls="shiftLogFormPanel" aria-expanded="false">Create Shift Log</button>
+            </div>
+          </section>
+
+          <section class="panel" id="shiftLogFormPanel" hidden>
             <div class="panel-header">
               <div>
                 <h2 id="shiftLogFormHeading">Create Shift Log</h2>
                 <p>Enter the complete shift report below. Drafts can be reopened and edited later.</p>
               </div>
+              <button type="button" class="secondary-btn" id="closeShiftFormBtn">Close</button>
             </div>
             <form id="shiftLogForm" class="parking-form shift-log-form">
               <input type="hidden" id="shiftLogId" />
