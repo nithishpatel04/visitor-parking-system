@@ -1,6 +1,6 @@
-# Visitor Parking Management System
+# SentinelOps Security Operations Suite
 
-Professional AWS serverless security operations platform with visitor parking, incident reports, shift logs, dashboard analytics, and role-based access control.
+Standalone AWS serverless Security Operations application with visitor parking control, incident management, shift logging, dashboard analytics, notifications, and role-based access control.
 
 ## Features
 
@@ -8,7 +8,7 @@ Professional AWS serverless security operations platform with visitor parking, i
 ✅ **Visitor Parking**: Create new passes with automatic 10-day monthly limit enforcement  
 ✅ **Incident Reports**: Draft, submit, view, and attach AWS S3 files to incident reports  
 ✅ **Security Shift Logs**: Draft and submit operational shift reports with security checks  
-✅ **Admin Console**: Grant exceptions to Building+Unit combinations  
+✅ **Admin Console**: Grant exceptions to Site+Unit combinations  
 ✅ **Professional Print**: 80mm thermal receipt format with security seal and validity box  
 ✅ **Role-Based Access**: Concierge, Manager, and Admin roles with permission enforcement  
 ✅ **Multi-Device Support**: Cloud-based sessions with per-device authentication  
@@ -353,6 +353,71 @@ Follow the comprehensive guide in [AWS-DEPLOYMENT-GUIDE.md](AWS-DEPLOYMENT-GUIDE
 - Automatic renewal system
 - Integration with parking sensors
 - Mobile app (React Native)
+
+## BRD Prompt (Standalone Security Operations App)
+
+Use this prompt with ChatGPT/Copilot to generate a complete Business Requirements Document for this project:
+
+```text
+Create a complete, professional Business Requirements Document (BRD) for a standalone application named "SentinelOps Security Operations Suite" (also acceptable: "Security Command Center"). Position it as a dedicated Security Operations product for a multi-site security company, not as an enhancement of a parking app.
+
+Context and scope:
+- Organization manages security operations across multiple client properties, facilities, and sites.
+- Application modules: Login/Auth, Dashboard Analytics, Visitor Parking, Incident Reports, Security Shift Logs, Notifications, Admin Exception Management, and Print Pass.
+- Cloud architecture is AWS-only: API Gateway + Lambda + DynamoDB + S3 (no Firebase/Supabase/other cloud migration).
+- Frontend is static HTML/CSS/JavaScript hosted on GitHub Pages; backend is Node.js serverless APIs.
+- User roles: Concierge, Manager, Admin.
+
+Produce a BRD with the following structure and depth:
+1) Executive Summary
+2) Business Objectives and Success Criteria (with measurable KPIs)
+3) Current Challenges / Problem Statement
+4) In Scope vs Out of Scope
+5) Stakeholders and RACI Matrix
+6) User Personas and Role Permissions
+7) End-to-End Business Processes and Workflows
+  - Visitor parking pass lifecycle (create, validate limits, print, expire)
+  - Incident report lifecycle (draft, submit, management view, attachment handling)
+  - Shift log lifecycle (draft, submit, archive)
+  - Admin exception lifecycle (grant/revoke/expiry/history)
+8) Functional Requirements (module-wise)
+  - Authentication and session behavior
+  - Dashboard analytics cards/charts/recent activity
+  - Parking pass rules (10-day monthly overnight limit, day-time duration=0)
+  - Incident reporting with S3 attachments
+  - Shift logs and security checks
+  - Notification center and read/unread management
+  - Admin console operations
+  - Print format and compliance requirements
+9) Business Rules and Validation Rules
+10) Non-Functional Requirements
+  - Performance, availability, scalability, security, auditability, usability, accessibility
+11) Data Requirements
+  - Logical data model, key entities, field-level definitions
+  - Data retention and archival expectations
+12) Reporting and Analytics Requirements
+13) Integration Requirements (AWS services and any external dependencies)
+14) Security and Compliance Requirements
+15) Assumptions, Constraints, and Dependencies
+16) Risks and Mitigation Plan
+17) Implementation Roadmap (phased), milestones, and rough effort estimates
+18) UAT Acceptance Criteria and Test Scenarios
+19) Post-deployment Operations and Support Model
+20) Appendix
+  - Glossary
+  - API capability summary mapped to business requirements
+
+Important requirements for writing style:
+- Write in formal business language suitable for management and technical teams.
+- Include requirement IDs (e.g., FR-001, NFR-001, BR-001).
+- For each functional requirement, include: description, priority (Must/Should/Could), rationale, and acceptance criteria.
+- Include at least 20 concrete acceptance criteria across modules.
+- Include at least 10 measurable KPIs with target values.
+- Provide workflow diagrams in Mermaid format for major processes.
+- Clearly preserve AWS-only deployment direction.
+```
+
+Tip: Save the output as `BRD_PROPOSAL.md` and review with operations, admin, and management stakeholders before implementation sign-off.
 
 ## License
 
