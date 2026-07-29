@@ -27,6 +27,12 @@ body {
   color: #fff;
 }
 
+.topbar-actions {
+  display: inline-flex;
+  gap: 0.65rem;
+  align-items: center;
+}
+
 .eyebrow {
   margin: 0 0 0.25rem;
   text-transform: uppercase;
@@ -157,6 +163,11 @@ th, td { padding: 0.8rem 0.7rem; border-bottom: 1px solid var(--border); text-al
 .status-message { margin-top: 0.85rem; color: var(--danger); }
 
 @media (max-width: 900px) {
+  .topbar-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
   .summary-grid { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
   .filters-grid { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
   .analytics-grid,
