@@ -1,4 +1,4 @@
-# SentinelOps Security Operations Suite
+# Security Operations 
 
 Standalone AWS serverless Security Operations application with visitor parking control, incident management, shift logging, dashboard analytics, notifications, and role-based access control.
 
