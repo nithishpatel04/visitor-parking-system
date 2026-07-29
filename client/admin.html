@@ -41,16 +41,41 @@
               <p class="eyebrow">Admin</p>
               <h1>Parking Exceptions</h1>
             </div>
-            <button type="button" class="sidebar-toggle" data-sidebar-toggle>Menu</button>
+            <div class="topbar-actions">
+              <button type="button" id="refreshAdminBtn" class="secondary-btn">Refresh</button>
+              <button type="button" class="sidebar-toggle" data-sidebar-toggle>Menu</button>
+            </div>
           </header>
 
           <main class="admin-shell">
+      <section class="admin-stats" aria-label="Admin overview">
+        <article class="admin-stat-card">
+          <p>Total Units</p>
+          <strong id="totalUnits">0</strong>
+        </article>
+        <article class="admin-stat-card">
+          <p>Units At Limit</p>
+          <strong id="atLimitUnits">0</strong>
+        </article>
+        <article class="admin-stat-card">
+          <p>Active Exceptions</p>
+          <strong id="activeExceptions">0</strong>
+        </article>
+        <article class="admin-stat-card">
+          <p>History Entries</p>
+          <strong id="historyEntries">0</strong>
+        </article>
+      </section>
+
+      <p id="adminStatus" class="admin-status" role="status" aria-live="polite"></p>
+
       <section class="panel">
         <div class="panel-header">
           <h2>Monthly Usage by Building + Unit</h2>
           <p>Grant temporary day-based exceptions so a unit can still receive parking passes after the monthly limit is reached.</p>
         </div>
-        <table>
+        <div class="table-wrap">
+        <table class="admin-table">
           <thead>
             <tr>
               <th>Building</th>
@@ -63,6 +88,7 @@
           </thead>
           <tbody id="unitRows"></tbody>
         </table>
+        </div>
       </section>
 
       <section class="panel">

@@ -1,7 +1,50 @@
 .admin-shell {
   display: grid;
-  gap: 1rem;
+  gap: 1.15rem;
   padding: 1.5rem 2rem 2.5rem;
+  background:
+    radial-gradient(1400px 400px at -10% -20%, rgba(14, 116, 144, 0.14), transparent),
+    radial-gradient(1200px 360px at 110% -30%, rgba(22, 163, 74, 0.12), transparent);
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 0.8rem;
+}
+
+.admin-stat-card {
+  background: linear-gradient(165deg, #ffffff, #f7fbff);
+  border: 1px solid #d7e6f7;
+  border-radius: 16px;
+  padding: 0.95rem 1rem;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+}
+
+.admin-stat-card p {
+  margin: 0;
+  color: #557087;
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.admin-stat-card strong {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 1.7rem;
+  color: #0f2940;
+}
+
+.admin-status {
+  margin: 0;
+  min-height: 1.25rem;
+  color: #0f5c8c;
+  font-weight: 500;
+}
+
+.admin-status.error {
+  color: #b91c1c;
 }
 
 .panel {
@@ -10,6 +53,26 @@
   border-radius: 16px;
   padding: 1.25rem;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.panel-header {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.panel-header p {
+  color: #59748d;
+}
+
+.admin-table tbody tr:hover {
+  background: #f7fbff;
+}
+
+.action-cell {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
 }
 
 .history-list {
@@ -26,12 +89,18 @@
 }
 
 .toggle-btn {
-  background: #2563eb;
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
   color: #fff;
   border: none;
   border-radius: 999px;
-  padding: 0.5rem 0.8rem;
+  padding: 0.52rem 0.9rem;
   cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.toggle-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(30, 64, 175, 0.24);
 }
 
 .exception-days {
@@ -42,7 +111,7 @@
 }
 
 .toggle-btn.disabled {
-  background: #dc2626;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
 }
 
 .badge {
@@ -52,4 +121,30 @@
   background: #dbeafe;
   color: #2563eb;
   font-size: 0.8rem;
+}
+
+.badge.neutral {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+@media (max-width: 980px) {
+  .admin-stats {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+  }
+
+  .action-cell {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-shell {
+    padding: 1rem;
+  }
+
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
 }

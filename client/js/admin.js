@@ -8,14 +8,38 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const rows = document.getElementById('unitRows');
   const history = document.getElementById('historyList');
+  const status = document.getElementById('adminStatus');
+  const totalUnits = document.getElementById('totalUnits');
+  const atLimitUnits = document.getElementById('atLimitUnits');
+  const activeExceptions = document.getElementById('activeExceptions');
+  const historyEntries = document.getElementById('historyEntries');
+  const refreshBtn = document.getElementById('refreshAdminBtn');
+
+  function escapeHtml(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function setStatus(message = '', isError = false) {
+    if (!status) return;
+    status.textContent = message;
+    status.classList.toggle('error', Boolean(isError));
+  }
 
   async function refreshAdmin() {
+    setStatus('Loading admin data...');
     const data = await getAdminData();
     rows.innerHTML = '';
 
     const exceptionsByKey = new Map((data.exceptions || []).map((entry) => [`${entry.building}::${entry.unit}`, entry]));
 
-    data.report.forEach((row) => {
+    const report = [...(data.report || [])].sort((a, b) => Number(b.atLimit) - Number(a.atLimit) || b.count - a.count);
+
+    report.forEach((row) => {
       const comboKey = `${row.building}::${row.unit}`;
       const entry = exceptionsByKey.get(comboKey);
       const isActive = Boolean(entry && entry.enabled && (!entry.expiresAt || new Date(entry.expiresAt) > new Date()));
@@ -24,12 +48,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${row.building}</td>
-        <td>${row.unit}</td>
+        <td>${escapeHtml(row.building)}</td>
+        <td>${escapeHtml(row.unit)}</td>
         <td>${row.count}</td>
         <td>${row.atLimit ? '<span class="badge">At limit</span>' : 'Open'}</td>
         <td>${isActive ? `<span class="badge">${statusLabel}</span>` : `<span class="badge neutral">${statusLabel}</span>`}</td>
-        <td>
+        <td class="action-cell">
           <select class="exception-days" data-building="${row.building}" data-unit="${row.unit}">
             <option value="1" ${days === 1 ? 'selected' : ''}>1 day</option>
             <option value="2" ${days === 2 ? 'selected' : ''}>2 days</option>
@@ -43,18 +67,27 @@ document.addEventListener('DOMContentLoaded', async () => {
       rows.appendChild(tr);
     });
 
+    const activeCount = (data.exceptions || []).filter((entry) => entry.enabled && (!entry.expiresAt || new Date(entry.expiresAt) > new Date())).length;
+    totalUnits.textContent = String(report.length);
+    atLimitUnits.textContent = String(report.filter((entry) => entry.atLimit).length);
+    activeExceptions.textContent = String(activeCount);
+    historyEntries.textContent = String((data.history || []).length);
+
     history.innerHTML = '';
-    if (!data.history.length) {
+    if (!(data.history || []).length) {
       history.innerHTML = '<li>No exception changes yet.</li>';
+      setStatus('Admin data is up to date.');
       return;
     }
 
     data.history.forEach((entry) => {
       const li = document.createElement('li');
       const label = entry.enabled ? `Enabled for ${entry.days || 0} day${(entry.days || 0) === 1 ? '' : 's'}` : 'Disabled';
-      li.innerHTML = `<strong>${entry.building} / ${entry.unit}</strong> — ${label} ${entry.reason ? `(${entry.reason})` : ''} at ${formatDateTime(entry.createdAt)}`;
+      li.innerHTML = `<strong>${escapeHtml(entry.building)} / ${escapeHtml(entry.unit)}</strong> - ${label} ${entry.reason ? `(${escapeHtml(entry.reason)})` : ''} at ${formatDateTime(entry.createdAt)}`;
       history.appendChild(li);
     });
+
+    setStatus('Admin data is up to date.');
   }
 
   rows.addEventListener('click', async (event) => {
@@ -67,9 +100,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     const select = row.querySelector('.exception-days');
     const days = Number(select?.value || 1);
 
-    await updateException(building, unit, !enabled, 'Managed from admin console', enabled ? 0 : days);
-    refreshAdmin();
+    try {
+      button.disabled = true;
+      setStatus(`${enabled ? 'Disabling' : 'Granting'} exception for ${building} / ${unit}...`);
+      await updateException(building, unit, !enabled, 'Managed from admin console', enabled ? 0 : days);
+      await refreshAdmin();
+    } catch (error) {
+      setStatus(error.message || 'Could not update exception.', true);
+    } finally {
+      button.disabled = false;
+    }
   });
+
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', async () => {
+      try {
+        refreshBtn.disabled = true;
+        await refreshAdmin();
+      } catch (error) {
+        setStatus(error.message || 'Could not refresh admin data.', true);
+      } finally {
+        refreshBtn.disabled = false;
+      }
+    });
+  }
 
   // Handle logout button
   const logoutBtn = document.getElementById('logoutBtn');
@@ -77,5 +131,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     logoutBtn.addEventListener('click', logout);
   }
 
-  refreshAdmin();
+  try {
+    await refreshAdmin();
+  } catch (error) {
+    setStatus(error.message || 'Failed to load admin data.', true);
+  }
 });

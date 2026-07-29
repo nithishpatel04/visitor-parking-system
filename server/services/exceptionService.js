@@ -22,8 +22,10 @@ function isExceptionEnabled(state, building, unit) {
   return hasActiveException(entry);
 }
 
-function setException(building, unit, enabled, reason = '', days = 0) {
-  const state = readData();
+async function setException(building, unit, enabled, reason = '', days = 0) {
+  const state = await readData();
+  state.exceptions = Array.isArray(state.exceptions) ? state.exceptions : [];
+  state.exceptionHistory = Array.isArray(state.exceptionHistory) ? state.exceptionHistory : [];
   const existing = getExceptionEntry(state, building, unit);
   const normalizedDays = Math.max(0, Number(days) || 0);
   const isEnabled = Boolean(enabled) && normalizedDays > 0;
@@ -57,7 +59,7 @@ function setException(building, unit, enabled, reason = '', days = 0) {
     createdAt: new Date().toISOString()
   });
 
-  writeData(state);
+  await writeData(state);
   return {
     building,
     unit,
@@ -70,18 +72,12 @@ function setException(building, unit, enabled, reason = '', days = 0) {
 }
 
 function getExceptions(state) {
-  if (!state) {
-    const { readData } = require('./storage');
-    state = readData();
-  }
+  if (!state || !Array.isArray(state.exceptions)) return [];
   return state.exceptions || [];
 }
 
 function getExceptionHistory(state) {
-  if (!state) {
-    const { readData } = require('./storage');
-    state = readData();
-  }
+  if (!state || !Array.isArray(state.exceptionHistory)) return [];
   return state.exceptionHistory || [];
 }
 
