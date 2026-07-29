@@ -6,10 +6,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const buttonTextNode = submitButton ? submitButton.childNodes[submitButton.childNodes.length - 1] : null;
   let isSubmitting = false;
 
-  // Warm API during credential entry to reduce first-login wait from cold starts.
-  fetch('https://r4muckg5ej.execute-api.us-east-1.amazonaws.com/prod/api/auth/verify', {
-    method: 'GET'
-  }).catch(() => {});
+  // Validate existing session only when a token exists to avoid expected 401 noise.
+  const existingToken = localStorage.getItem('authToken');
+  if (existingToken) {
+    fetch('https://r4muckg5ej.execute-api.us-east-1.amazonaws.com/prod/api/auth/verify', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${existingToken}`
+      }
+    }).catch(() => {});
+  }
 
   function setLoadingState(loadingState) {
     if (!submitButton) return;
