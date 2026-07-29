@@ -1,7 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const formPanel = document.getElementById('parkingFormPanel');
   const form = document.getElementById('parkingForm');
   const message = document.getElementById('formMessage');
   const historyBody = document.getElementById('historyBody');
+  const createButton = document.getElementById('createParkingPassBtn');
+  const closeButton = document.getElementById('closeParkingFormBtn');
+
+  function showForm() {
+    if (Object.prototype.hasOwnProperty.call(formPanel, 'hidden')) {
+      formPanel.hidden = false;
+    }
+    if (createButton) {
+      createButton.setAttribute('aria-expanded', 'true');
+    }
+    formPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function hideForm() {
+    if (Object.prototype.hasOwnProperty.call(formPanel, 'hidden')) {
+      formPanel.hidden = true;
+    }
+    if (createButton) {
+      createButton.setAttribute('aria-expanded', 'false');
+      createButton.focus();
+    }
+  }
 
   function filterPasses(passes, filters) {
     return passes.filter((pass) => {
@@ -74,9 +97,24 @@ document.addEventListener('DOMContentLoaded', () => {
       
       form.reset();
       await refreshParkingHistory();
+      hideForm();
     } catch (error) {
       setStatusMessage(message, error.message || 'Failed to create parking pass.', true);
       console.error('Error details:', error);
+    }
+  });
+
+  if (createButton) {
+    createButton.addEventListener('click', showForm);
+  }
+
+  if (closeButton) {
+    closeButton.addEventListener('click', hideForm);
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && formPanel && !formPanel.hidden) {
+      hideForm();
     }
   });
 
