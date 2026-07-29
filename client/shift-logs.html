@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Security Shift Logs</title>
+    <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/sidebar.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body data-page="shift-logs">
+    <div class="app-layout">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <div class="sidebar-mark">S</div>
+          <div>
+            <h2>SONIC</h2>
+            <p>Security Operations</p>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <a href="index.html" class="nav-item" data-nav="dashboard"><span class="nav-icon">D</span><span>Dashboard</span></a>
+          <a href="parking.html" class="nav-item" data-nav="parking"><span class="nav-icon">P</span><span>Visitor Parking</span></a>
+          <a href="incidents.html" class="nav-item" data-nav="incidents"><span class="nav-icon">I</span><span>Incident Reports</span></a>
+          <a href="shift-logs.html" class="nav-item" data-nav="shift-logs"><span class="nav-icon">L</span><span>Security Shift Logs</span></a>
+          <a href="admin.html" class="nav-item" data-nav="admin"><span class="nav-icon">A</span><span>Admin</span></a>
+        </nav>
+
+        <div class="sidebar-spacer"></div>
+
+        <div class="sidebar-footer sidebar-nav">
+          <button id="logoutBtn" class="nav-item" type="button"><span class="nav-icon">O</span><span>Logout</span></button>
+        </div>
+      </aside>
+
+      <div class="sidebar-overlay" aria-hidden="true"></div>
+
+      <div class="app-content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Security Shift Logs</p>
+            <h1>Operational Shift Reports</h1>
+          </div>
+          <button type="button" class="sidebar-toggle" data-sidebar-toggle>Menu</button>
+        </header>
+
+        <main class="dashboard-shell">
+          <section class="panel controls-panel">
+            <div class="panel-header">
+              <h2>Security Shift Logs</h2>
+              <button class="primary-btn" type="button" id="createShiftLogBtn">Create Shift Log</button>
+            </div>
+            <div class="filters-grid">
+              <label>
+                Search
+                <input id="shiftSearch" type="text" placeholder="Title, officer, building, shift" />
+              </label>
+              <label>
+                Date From
+                <input id="shiftFrom" type="date" />
+              </label>
+              <label>
+                Date To
+                <input id="shiftTo" type="date" />
+              </label>
+              <label>
+                Status
+                <select id="shiftStatusFilter">
+                  <option value="">All statuses</option>
+                  <option value="Draft">Draft</option>
+                  <option value="Submitted">Submitted</option>
+                </select>
+              </label>
+              <button class="secondary-btn" type="button" id="clearShiftFilters">Clear Filters</button>
+            </div>
+          </section>
+
+          <section class="panel table-panel">
+            <div class="panel-header">
+              <h2>Security Shift Logs</h2>
+              <p>Created By shows Officer Name 1 and Officer Name 2 when entered.</p>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Created By</th>
+                    <th>Status</th>
+                    <th>View</th>
+                  </tr>
+                </thead>
+                <tbody id="shiftLogRows">
+                  <tr><td colspan="4">Loading shift logs...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel" id="shiftLogFormPanel" hidden>
+            <div class="panel-header">
+              <div>
+                <h2 id="shiftLogFormHeading">Create Shift Log</h2>
+                <p>Enter the complete shift report below. Drafts can be reopened and edited later.</p>
+              </div>
+              <button type="button" class="secondary-btn" id="closeShiftFormBtn">Close</button>
+            </div>
+            <form id="shiftLogForm" class="parking-form shift-log-form">
+              <input type="hidden" id="shiftLogId" />
+              <label>
+                Title
+                <input id="shiftTitle" type="text" required placeholder="Night Shift Report – July 28, 2026" />
+              </label>
+              <label>
+                Building
+                <input id="shiftBuilding" type="text" required placeholder="2 Sonic" />
+              </label>
+              <label>
+                Date
+                <input id="shiftDate" type="date" required />
+              </label>
+              <label>
+                Shift
+                <select id="shiftType" required>
+                  <option value="">Select shift</option>
+                  <option value="Morning">Morning</option>
+                  <option value="Afternoon">Afternoon</option>
+                  <option value="Night">Night</option>
+                </select>
+              </label>
+              <label>
+                Officer Name 1
+                <input id="officerName1" type="text" required placeholder="Officer name" />
+              </label>
+              <label>
+                Officer Name 2
+                <input id="officerName2" type="text" placeholder="Optional" />
+              </label>
+              <label>
+                Shift Start Time
+                <input id="shiftStartTime" type="time" required />
+              </label>
+              <label>
+                Shift End Time
+                <input id="shiftEndTime" type="time" required />
+              </label>
+              <div class="security-check-grid">
+                <label>
+                  CCTV Cameras Checked
+                  <select id="checkCctvStatus">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                  <input id="checkCctvNotes" type="text" placeholder="Notes" />
+                </label>
+                <label>
+                  Fire Panel Checked
+                  <select id="checkFirePanelStatus"><option value="Yes">Yes</option><option value="No">No</option></select>
+                  <input id="checkFirePanelNotes" type="text" placeholder="Notes" />
+                </label>
+                <label>
+                  Master Keys Checked
+                  <select id="checkMasterKeysStatus"><option value="Yes">Yes</option><option value="No">No</option></select>
+                  <input id="checkMasterKeysNotes" type="text" placeholder="Notes" />
+                </label>
+                <label>
+                  Key Lockbox Checked
+                  <select id="checkKeyLockboxStatus"><option value="Yes">Yes</option><option value="No">No</option></select>
+                  <input id="checkKeyLockboxNotes" type="text" placeholder="Notes" />
+                </label>
+                <label>
+                  Building Patrol Completed
+                  <select id="checkPatrolStatus"><option value="Yes">Yes</option><option value="No">No</option></select>
+                  <input id="checkPatrolNotes" type="text" placeholder="Notes" />
+                </label>
+              </div>
+              <label class="full-width">
+                Shift Report
+                <textarea id="shiftReportText" rows="12" placeholder="2300 - Officer Mohib on site."></textarea>
+              </label>
+              <p id="shiftDraftState" class="status-message">Draft not saved yet.</p>
+              <div class="form-actions">
+                <button type="button" class="secondary-btn" id="saveShiftDraftBtn">Save Draft</button>
+                <button type="button" class="primary-btn" id="submitShiftReportBtn">Save Shift Report</button>
+              </div>
+            </form>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/shift-logs.js"></script>
+    <script src="js/navigation.js"></script>
+  </body>
+</html>

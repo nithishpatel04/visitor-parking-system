@@ -46,6 +46,10 @@ exports.handler = async (event, context) => {
       requestPath = '/admin.html';
     } else if (requestPath === '/parking') {
       requestPath = '/parking.html';
+    } else if (requestPath === '/incidents') {
+      requestPath = '/incidents.html';
+    } else if (requestPath === '/shift-logs') {
+      requestPath = '/shift-logs.html';
     } else if (requestPath === '/print') {
       requestPath = '/print.html';
     }
@@ -137,6 +141,22 @@ exports.handler = async (event, context) => {
       const parkingHandled = parkingRoutes(mockReq, mockRes);
       if (parkingHandled !== null) return;
 
+      const incidentRoutes = require('./routes/incidentRoutes');
+      const incidentHandled = incidentRoutes(mockReq, mockRes);
+      if (incidentHandled !== null) return;
+
+      const shiftLogRoutes = require('./routes/shiftLogRoutes');
+      const shiftLogHandled = shiftLogRoutes(mockReq, mockRes);
+      if (shiftLogHandled !== null) return;
+
+      const notificationRoutes = require('./routes/notificationRoutes');
+      const notificationHandled = notificationRoutes(mockReq, mockRes);
+      if (notificationHandled !== null) return;
+
+      const dashboardRoutes = require('./routes/dashboardRoutes');
+      const dashboardHandled = dashboardRoutes(mockReq, mockRes);
+      if (dashboardHandled !== null) return;
+
       const adminRoutes = require('./routes/adminRoutes');
       const adminHandled = adminRoutes(mockReq, mockRes);
       if (adminHandled !== null) return;
@@ -152,6 +172,10 @@ if (require.main === module) {
   const port = process.env.PORT || 3000;
   const cors = require('./middleware/cors');
   const parkingRoutes = require('./routes/parkingRoutes');
+  const incidentRoutes = require('./routes/incidentRoutes');
+  const shiftLogRoutes = require('./routes/shiftLogRoutes');
+  const notificationRoutes = require('./routes/notificationRoutes');
+  const dashboardRoutes = require('./routes/dashboardRoutes');
   const adminRoutes = require('./routes/adminRoutes');
   const { handleAuthRoutes } = require('./routes/authRoutes');
 
@@ -190,6 +214,10 @@ if (require.main === module) {
       requestPath = '/admin.html';
     } else if (requestPath === '/parking') {
       requestPath = '/parking.html';
+    } else if (requestPath === '/incidents') {
+      requestPath = '/incidents.html';
+    } else if (requestPath === '/shift-logs') {
+      requestPath = '/shift-logs.html';
     } else if (requestPath === '/print') {
       requestPath = '/print.html';
     }
@@ -225,6 +253,26 @@ if (require.main === module) {
 
         const parkingHandled = parkingRoutes(req, res);
         if (parkingHandled !== null) {
+          return;
+        }
+
+        const incidentHandled = incidentRoutes(req, res);
+        if (incidentHandled !== null) {
+          return;
+        }
+
+        const shiftLogHandled = shiftLogRoutes(req, res);
+        if (shiftLogHandled !== null) {
+          return;
+        }
+
+        const notificationHandled = notificationRoutes(req, res);
+        if (notificationHandled !== null) {
+          return;
+        }
+
+        const dashboardHandled = dashboardRoutes(req, res);
+        if (dashboardHandled !== null) {
           return;
         }
 

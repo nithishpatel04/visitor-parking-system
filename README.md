@@ -1,23 +1,25 @@
 # Visitor Parking Management System
 
-Professional parking management solution with role-based access control, multi-device support, and cloud deployment capabilities.
+Professional AWS serverless security operations platform with visitor parking, incident reports, shift logs, dashboard analytics, and role-based access control.
 
 ## Features
 
-✅ **Dashboard**: View all parking passes, search/filter by building, unit, plate, or date range  
-✅ **Parking Form**: Create new passes with automatic 10-day monthly limit enforcement  
-✅ **Day-time Parking**: Support for 0-3 day duration with special handling for same-day expiry  
+✅ **Dashboard**: Security operations summary, parking trend chart, incident breakdown chart, and recent activity  
+✅ **Visitor Parking**: Create new passes with automatic 10-day monthly limit enforcement  
+✅ **Incident Reports**: Draft, submit, view, and attach AWS S3 files to incident reports  
+✅ **Security Shift Logs**: Draft and submit operational shift reports with security checks  
 ✅ **Admin Console**: Grant exceptions to Building+Unit combinations  
 ✅ **Professional Print**: 80mm thermal receipt format with security seal and validity box  
 ✅ **Role-Based Access**: Concierge, Manager, and Admin roles with permission enforcement  
 ✅ **Multi-Device Support**: Cloud-based sessions with per-device authentication  
-✅ **Cloud Ready**: DynamoDB-backed storage for AWS deployment  
+✅ **Cloud Ready**: AWS Lambda, API Gateway, DynamoDB, and S3-backed storage  
 
 ## Tech Stack
 
 - **Frontend**: HTML5, CSS3, Vanilla JavaScript (no frameworks)
-- **Backend**: Node.js, Express middleware patterns
+- **Backend**: Node.js on AWS Lambda with Express-style routing
 - **Database**: DynamoDB (AWS) / JSON file (local)
+- **Object Storage**: Amazon S3 for incident attachments
 - **Authentication**: Token-based sessions with role management
 - **Deployment**: AWS Lambda, API Gateway, DynamoDB
 
@@ -62,8 +64,10 @@ Admin:       admin / 1234      (Can create passes, manage exceptions)
 ```
 visitor-parking-system/
 ├── client/                          # Frontend files
-│   ├── index.html                  # Dashboard
-│   ├── parking.html                # Parking form
+│   ├── index.html                  # Security operations dashboard
+│   ├── parking.html                # Visitor parking form
+│   ├── incidents.html              # Incident reports
+│   ├── shift-logs.html             # Security shift logs
 │   ├── admin.html                  # Admin console
 │   ├── print.html                  # Print receipt
 │   ├── login.html                  # Login page
@@ -77,16 +81,24 @@ visitor-parking-system/
 │   ├── routes/
 │   │   ├── authRoutes.js          # Login/logout endpoints
 │   │   ├── parkingRoutes.js       # Pass CRUD endpoints
+│   │   ├── incidentRoutes.js      # Incident report endpoints
+│   │   ├── shiftLogRoutes.js      # Shift log endpoints
+│   │   ├── dashboardRoutes.js     # Dashboard summary endpoints
 │   │   └── adminRoutes.js         # Admin endpoints
 │   ├── controllers/
 │   │   ├── parkingController.js   # Business logic for passes
+│   │   ├── incidentController.js  # Incident reports and attachments
+│   │   ├── shiftLogController.js  # Shift logs
+│   │   ├── dashboardController.js # Dashboard analytics
 │   │   └── adminController.js     # Business logic for admin
 │   ├── services/
 │   │   ├── storage.js             # Data persistence
 │   │   ├── authService.js         # Session management
 │   │   ├── exceptionService.js    # 10-day limit exceptions
 │   │   ├── passCounter.js         # Monthly usage counting
-│   │   └── dynamodb.js            # DynamoDB client (AWS)
+│   │   ├── authorization.js      # Session/role checks
+│   │   ├── s3.js                 # Presigned attachment URLs
+│   │   └── config/dynamodb.js    # DynamoDB client (AWS)
 │   └── config/
 │       └── dynamodb.js            # DynamoDB configuration
 ├── .env.example                    # Environment variables template
@@ -106,6 +118,28 @@ visitor-parking-system/
 - `GET /api/passes` - List all passes (with filters)
 - `POST /api/passes` - Create new parking pass
 - `DELETE /api/passes/:id` - Delete a pass
+
+### Dashboard
+- `GET /api/dashboard/summary` - Dashboard summary cards and recent activity
+- `GET /api/dashboard/parking-trend` - Last 7 days of parking pass volume
+- `GET /api/dashboard/incident-breakdown` - Incident totals by type
+
+### Security Operations
+- `GET /api/shift-logs` - List shift logs
+- `GET /api/shift-logs/:id` - Read a shift log
+- `POST /api/shift-logs` - Create a shift log draft
+- `PUT /api/shift-logs/:id` - Update a shift log draft
+- `POST /api/shift-logs/:id/submit` - Submit a shift log
+- `GET /api/incidents` - List incident reports
+- `GET /api/incidents/:id` - Read an incident report
+- `POST /api/incidents` - Create an incident report draft
+- `PUT /api/incidents/:id` - Update an incident report draft
+- `POST /api/incidents/:id/submit` - Submit an incident report
+- `POST /api/incidents/:id/attachment-upload-url` - Generate a presigned S3 upload URL
+- `GET /api/incidents/:id/attachment-download-url` - Generate a presigned S3 download URL
+- `GET /api/notifications` - List unread and recent notifications
+- `GET /api/notifications/count` - Notification count
+- `POST /api/notifications/:id` - Mark a notification read
 
 ### Admin
 - `GET /api/admin/units` - Get monthly usage by unit
@@ -140,12 +174,13 @@ node server/server.js
 Follow the comprehensive guide in [AWS-DEPLOYMENT-GUIDE.md](AWS-DEPLOYMENT-GUIDE.md)
 
 **Quick Summary:**
-1. Create DynamoDB tables (3 tables)
-2. Create IAM user with DynamoDB permissions
-3. Deploy code to Lambda
-4. Create API Gateway
-5. Update client API endpoint
-6. Test
+1. Create DynamoDB tables for passes, sessions, exceptions, shift logs, incident reports, and notifications
+2. Create an S3 bucket for incident attachments
+3. Configure `AWS_REGION`, `INCIDENT_ATTACHMENTS_BUCKET`, and Lambda IAM permissions
+4. Deploy code to Lambda
+5. Create API Gateway
+6. Update client API endpoint
+7. Test login, parking, incident reports, and shift logs
 
 **Cost**: ~$0-5/month for small usage
 
@@ -195,6 +230,60 @@ Follow the comprehensive guide in [AWS-DEPLOYMENT-GUIDE.md](AWS-DEPLOYMENT-GUIDE
   expiresAt: ISO8601,
   createdAt: ISO8601,
   ttl: Number (Unix timestamp)
+}
+```
+
+### `shift-logs` Table
+```
+{
+  id: String (PK),
+  title: String,
+  building: String,
+  shiftDate: YYYY-MM-DD,
+  shiftType: String,
+  officerName1: String,
+  officerName2: String,
+  shiftStartTime: HH:MM,
+  shiftEndTime: HH:MM,
+  securityChecks: Object,
+  reportText: String,
+  status: String,
+  submissionDateTime: ISO8601,
+  ttl: Number (Unix timestamp)
+}
+```
+
+### `incident-reports` Table
+```
+{
+  id: String (PK),
+  title: String,
+  incidentType: String,
+  unitAffected: String,
+  submittedBy: String,
+  officersInvolved: String,
+  reportText: String,
+  attachment: Object,
+  status: String,
+  submissionDateTime: ISO8601,
+  viewedDateTime: ISO8601,
+  ttl: Number (Unix timestamp)
+}
+```
+
+### `notifications` Table
+```
+{
+  id: String (PK),
+  type: String,
+  incidentId: String,
+  title: String,
+  incidentType: String,
+  unitAffected: String,
+  submittedBy: String,
+  submissionDateTime: ISO8601,
+  read: Boolean,
+  readDateTime: ISO8601
 }
 ```
 

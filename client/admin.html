@@ -6,20 +6,45 @@
     <title>Admin Console</title>
     <link rel="stylesheet" href="css/dashboard.css" />
     <link rel="stylesheet" href="css/admin.css" />
-  </head>
-  <body>
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">Admin</p>
-        <h1>Parking Exceptions</h1>
-      </div>
-      <nav class="nav-links">
-        <a href="index.html" class="secondary-btn">Dashboard</a>
-        <a href="parking.html">New Pass</a>
-      </nav>
-    </header>
+    </head>
+    <body data-page="admin">
+      <div class="app-layout">
+        <aside class="app-sidebar" aria-label="Primary navigation">
+          <div class="sidebar-brand">
+            <div class="sidebar-mark">S</div>
+            <div>
+              <h2>SONIC</h2>
+              <p>Security Operations</p>
+            </div>
+          </div>
 
-    <main class="admin-shell">
+          <nav class="sidebar-nav">
+            <a href="index.html" class="nav-item" data-nav="dashboard"><span class="nav-icon">D</span><span>Dashboard</span></a>
+            <a href="parking.html" class="nav-item" data-nav="parking"><span class="nav-icon">P</span><span>Visitor Parking</span></a>
+            <a href="incidents.html" class="nav-item" data-nav="incidents"><span class="nav-icon">I</span><span>Incident Reports</span></a>
+            <a href="shift-logs.html" class="nav-item" data-nav="shift-logs"><span class="nav-icon">L</span><span>Security Shift Logs</span></a>
+            <a href="admin.html" class="nav-item" data-nav="admin"><span class="nav-icon">A</span><span>Admin</span></a>
+          </nav>
+
+          <div class="sidebar-spacer"></div>
+
+          <div class="sidebar-footer sidebar-nav">
+            <button id="logoutBtn" class="nav-item" type="button"><span class="nav-icon">O</span><span>Logout</span></button>
+          </div>
+        </aside>
+
+        <div class="sidebar-overlay" aria-hidden="true"></div>
+
+        <div class="app-content">
+          <header class="topbar">
+            <div>
+              <p class="eyebrow">Admin</p>
+              <h1>Parking Exceptions</h1>
+            </div>
+            <button type="button" class="sidebar-toggle" data-sidebar-toggle>Menu</button>
+          </header>
+
+          <main class="admin-shell">
       <section class="panel">
         <div class="panel-header">
           <h2>Monthly Usage by Building + Unit</h2>
@@ -47,11 +72,14 @@
         </div>
         <ul id="historyList" class="history-list"></ul>
       </section>
-    </main>
+          </main>
+        </div>
+      </div>
 
     <script src="js/auth.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
     <script src="js/admin.js"></script>
+      <script src="js/navigation.js"></script>
   </body>
 </html>

@@ -69,15 +69,19 @@ function handleAuthRoutes(req, res, pathname, method) {
     const authHeader = req.headers.authorization || '';
     const token = authHeader.replace('Bearer ', '');
 
-    const session = validateSession(token);
-    if (!session) {
+    validateSession(token).then((session) => {
+      if (!session) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid or expired session' }));
+        return;
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ user: session }));
+    }).catch(() => {
       res.writeHead(401, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Invalid or expired session' }));
-      return;
-    }
-
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ user: session }));
+    });
     return true;
   }
 

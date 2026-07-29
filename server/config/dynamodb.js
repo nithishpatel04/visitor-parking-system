@@ -1,22 +1,21 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, GetCommand, PutCommand, ScanCommand, UpdateCommand, DeleteCommand, QueryCommand } = require("@aws-sdk/lib-dynamodb");
 
-// Initialize DynamoDB client with credentials from environment variables
-const client = new DynamoDBClient({ 
-  region: "us-east-1", // Fixed region for your parking app
-  credentials: {
-    accessKeyId: process.env.ACCESS_KEY_ID,
-    secretAccessKey: process.env.SECRET_ACCESS_KEY
-  }
-});
+const region = process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || "us-east-1";
+
+// Use the Lambda execution role / default AWS credential chain.
+const client = new DynamoDBClient({ region });
 
 const docClient = DynamoDBDocumentClient.from(client);
 
 // Table names (you'll create these in AWS)
 const TABLES = {
-  PASSES: process.env.DYNAMODB_PASSES_TABLE || "parking-passes",
-  SESSIONS: process.env.DYNAMODB_SESSIONS_TABLE || "parking-sessions",
-  EXCEPTIONS: process.env.DYNAMODB_EXCEPTIONS_TABLE || "parking-exceptions"
+  PASSES: process.env.PASSES_TABLE || process.env.DYNAMODB_PASSES_TABLE || "passes",
+  SESSIONS: process.env.SESSIONS_TABLE || process.env.DYNAMODB_SESSIONS_TABLE || "sessions",
+  EXCEPTIONS: process.env.EXCEPTIONS_TABLE || process.env.DYNAMODB_EXCEPTIONS_TABLE || "exceptions",
+  SHIFT_LOGS: process.env.SHIFT_LOGS_TABLE || "shift-logs",
+  INCIDENT_REPORTS: process.env.INCIDENT_REPORTS_TABLE || "incident-reports",
+  NOTIFICATIONS: process.env.NOTIFICATIONS_TABLE || "notifications"
 };
 
 // Helper functions for DynamoDB operations
@@ -186,4 +185,4 @@ const db = {
   }
 };
 
-module.exports = { db, TABLES, docClient };
+module.exports = { db, TABLES, docClient, GetCommand, PutCommand, ScanCommand, UpdateCommand, DeleteCommand, QueryCommand };

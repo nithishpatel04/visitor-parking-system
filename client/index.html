@@ -3,21 +3,47 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Visitor Parking Dashboard</title>
+    <title>Security Operations Dashboard</title>
+    <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/sidebar.css" />
     <link rel="stylesheet" href="css/dashboard.css" />
   </head>
-  <body>
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">Parking management</p>
-        <h1>Visitor Parking Dashboard</h1>
-      </div>
-      <nav class="nav-links">
-        <a href="parking.html" class="primary-btn">New Parking Pass</a>
-        <a href="admin.html">Admin</a>
-        <button id="logoutBtn" class="secondary-btn" style="background: none; color: inherit; cursor: pointer; text-decoration: underline;">Logout</button>
-      </nav>
-    </header>
+  <body data-page="dashboard">
+    <div class="app-layout">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <div class="sidebar-mark">S</div>
+          <div>
+            <h2>SONIC</h2>
+            <p>Security Operations</p>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <a href="index.html" class="nav-item" data-nav="dashboard"><span class="nav-icon">D</span><span>Dashboard</span></a>
+          <a href="parking.html" class="nav-item" data-nav="parking"><span class="nav-icon">P</span><span>Visitor Parking</span></a>
+          <a href="incidents.html" class="nav-item" data-nav="incidents"><span class="nav-icon">I</span><span>Incident Reports</span></a>
+          <a href="shift-logs.html" class="nav-item" data-nav="shift-logs"><span class="nav-icon">L</span><span>Security Shift Logs</span></a>
+          <a href="admin.html" class="nav-item" data-nav="admin"><span class="nav-icon">A</span><span>Admin</span></a>
+        </nav>
+
+        <div class="sidebar-spacer"></div>
+
+        <div class="sidebar-footer sidebar-nav">
+          <button id="logoutBtn" class="nav-item" type="button"><span class="nav-icon">O</span><span>Logout</span></button>
+        </div>
+      </aside>
+
+      <div class="sidebar-overlay" aria-hidden="true"></div>
+
+      <div class="app-content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Dashboard</p>
+            <h1>Security Operations Dashboard</h1>
+          </div>
+          <button type="button" class="sidebar-toggle" data-sidebar-toggle>Menu</button>
+        </header>
 
     <main class="dashboard-shell">
       <section class="panel controls-panel">
@@ -64,12 +90,46 @@
           <strong id="activePasses">0</strong>
         </article>
         <article class="summary-card">
-          <span class="summary-label">Units at Limit</span>
-          <strong id="unitsAtLimit">0</strong>
+          <span class="summary-label">Incident Reports Submitted</span>
+          <strong id="incidentReportsSubmitted">0</strong>
         </article>
         <article class="summary-card">
-          <span class="summary-label">Exceptions This Month</span>
-          <strong id="exceptionsThisMonth">0</strong>
+          <span class="summary-label">Shift Logs Submitted Today</span>
+          <strong id="shiftReportsSubmittedToday">0</strong>
+        </article>
+      </section>
+
+      <section class="analytics-grid">
+        <article class="panel chart-panel">
+          <div class="panel-header">
+            <h2>Parking Trend</h2>
+            <p>Daily passes for the last 7 days.</p>
+          </div>
+          <div id="parkingTrendChart" class="chart" aria-label="Parking trend chart"></div>
+        </article>
+        <article class="panel chart-panel">
+          <div class="panel-header">
+            <h2>Incident Breakdown</h2>
+            <p>Submitted incident reports by type.</p>
+          </div>
+          <div id="incidentBreakdownChart" class="chart" aria-label="Incident breakdown chart"></div>
+        </article>
+      </section>
+
+      <section class="recent-grid">
+        <article class="panel recent-panel">
+          <div class="panel-header">
+            <h2>Recent Incident Reports</h2>
+            <p>Latest submitted incidents.</p>
+          </div>
+          <div id="recentIncidents" class="recent-list"></div>
+        </article>
+        <article class="panel recent-panel">
+          <div class="panel-header">
+            <h2>Recent Shift Logs</h2>
+            <p>Latest shift log activity.</p>
+          </div>
+          <div id="recentShiftLogs" class="recent-list"></div>
         </article>
       </section>
 
@@ -99,7 +159,9 @@
           </table>
         </div>
       </section>
-    </main>
+      </main>
+      </div>
+    </div>
 
     <script src="js/auth.js"></script>
     <script src="js/utils.js"></script>
@@ -107,6 +169,6 @@
     <script src="js/search.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/table.js"></script>
-    <script src="js/dashboard.js"></script>
+    <script src="js/navigation.js"></script>
   </body>
 </html>

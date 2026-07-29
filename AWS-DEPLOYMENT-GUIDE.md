@@ -21,10 +21,16 @@
     ┌────────────────┼────────────────┐
     │                │                │
     ▼                ▼                ▼
-┌─────────┐    ┌──────────┐    ┌───────────┐
-│DynamoDB │    │DynamoDB  │    │DynamoDB   │
-│Passes   │    │Sessions  │    │Exceptions │
-└─────────┘    └──────────┘    └───────────┘
+┌─────────┐    ┌──────────┐    ┌───────────┐    ┌──────────────┐
+│DynamoDB │    │DynamoDB  │    │DynamoDB   │    │DynamoDB      │
+│Passes   │    │Sessions  │    │Exceptions │    │Shift/Incidents│
+└─────────┘    └──────────┘    └───────────┘    └──────────────┘
+            │
+            ▼
+         ┌─────────┐
+         │   S3    │
+         │ Attach. │
+         └─────────┘
 ```
 
 ## Step-by-Step AWS Setup
@@ -93,6 +99,24 @@
      - Attribute name: `ttl`
      - Click "Enable"
 
+5. **Create Table: `shift-logs`**
+   - Click "Create table"
+   - Table name: `shift-logs`
+   - Partition key: `id` (String)
+   - Billing: On-demand
+
+6. **Create Table: `incident-reports`**
+   - Click "Create table"
+   - Table name: `incident-reports`
+   - Partition key: `id` (String)
+   - Billing: On-demand
+
+7. **Create Table: `notifications`**
+   - Click "Create table"
+   - Table name: `notifications`
+   - Partition key: `id` (String)
+   - Billing: On-demand
+
 ### Phase 3: Deploy to AWS Lambda (15 minutes)
 
 #### Option A: Using AWS Console (Easiest)
@@ -110,7 +134,11 @@
    - Runtime: Node.js 18.x
    - Click "Create function"
 
-3. **Upload Code**
+3. **Use the Lambda execution role for AWS access**
+   - Attach permissions for DynamoDB tables and the incident attachment S3 bucket
+   - You do not need to store AWS access keys in Lambda environment variables
+
+4. **Upload Code**
    - In the Lambda console, scroll to "Code source"
    - Click "Upload from" → "Zip file"
    - Create a zip of your project:
@@ -120,24 +148,26 @@
      ```
    - Upload the zip file
 
-4. **Configure Handler**
+5. **Configure Handler**
    - In "Runtime settings"
    - Change Handler to: `server/server.js`
 
-5. **Set Environment Variables**
+6. **Set Environment Variables**
    - Scroll to "Environment variables"
    - Add:
      ```
      AWS_REGION = us-east-1
-     AWS_ACCESS_KEY_ID = [your key from IAM]
-     AWS_SECRET_ACCESS_KEY = [your secret from IAM]
      DYNAMODB_PASSES_TABLE = parking-passes
      DYNAMODB_SESSIONS_TABLE = parking-sessions
      DYNAMODB_EXCEPTIONS_TABLE = parking-exceptions
+     SHIFT_LOGS_TABLE = shift-logs
+     INCIDENT_REPORTS_TABLE = incident-reports
+     NOTIFICATIONS_TABLE = notifications
+     INCIDENT_ATTACHMENTS_BUCKET = your-incident-attachments-bucket
      ```
    - Click "Save"
 
-6. **Increase Timeout**
+7. **Increase Timeout**
    - Scroll to "Basic settings"
    - Change Timeout to 30 seconds
    - Click "Save"
@@ -148,10 +178,8 @@
 # Install AWS CLI (if not already installed)
 # https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 
-# Configure AWS credentials
+# Configure AWS credentials for local CLI use if needed
 aws configure
-# Enter your Access Key ID
-# Enter your Secret Access Key
 # Default region: us-east-1
 # Output format: json
 
@@ -164,7 +192,7 @@ aws lambda create-function `
   --zip-file fileb://parking-app.zip `
   --timeout 30 `
   --memory-size 512 `
-  --environment Variables={AWS_REGION=us-east-1,DYNAMODB_PASSES_TABLE=parking-passes,DYNAMODB_SESSIONS_TABLE=parking-sessions,DYNAMODB_EXCEPTIONS_TABLE=parking-exceptions}
+   --environment Variables={AWS_REGION=us-east-1,DYNAMODB_PASSES_TABLE=parking-passes,DYNAMODB_SESSIONS_TABLE=parking-sessions,DYNAMODB_EXCEPTIONS_TABLE=parking-exceptions,SHIFT_LOGS_TABLE=shift-logs,INCIDENT_REPORTS_TABLE=incident-reports,NOTIFICATIONS_TABLE=notifications,INCIDENT_ATTACHMENTS_BUCKET=your-incident-attachments-bucket}
 ```
 
 ### Phase 4: Set Up API Gateway (10 minutes)
