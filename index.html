@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting to Login...</title>
+    <title>Redirecting to Client App...</title>
     <script>
-        // Redirect to login page immediately
-        window.location.href = 'login.html';
+        // Redirect to client login page immediately
+        window.location.replace('client/login.html' + window.location.search + window.location.hash);
     </script>
 </head>
 <body>
-    <p style="text-align: center; margin-top: 50px; font-family: Arial;">Redirecting to login page...</p>
+    <p style="text-align: center; margin-top: 50px; font-family: Arial;">Redirecting to client application...</p>
 </body>
 </html>

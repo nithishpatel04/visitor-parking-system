@@ -1,0 +1,234 @@
+:root {
+  --login-bg-a: #0f172a;
+  --login-bg-b: #1d4ed8;
+  --login-bg-c: #0ea5e9;
+  --card-text: #0f172a;
+  --card-muted: #475569;
+  --line: #dbe5f2;
+  --success-bg: #dcfce7;
+  --success-fg: #166534;
+  --error-bg: #fee2e2;
+  --error-fg: #991b1b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--card-text);
+  background:
+    radial-gradient(1000px 600px at 0% 0%, rgba(14, 165, 233, 0.3), transparent 60%),
+    radial-gradient(900px 550px at 100% 100%, rgba(59, 130, 246, 0.25), transparent 55%),
+    linear-gradient(140deg, var(--login-bg-a), var(--login-bg-b) 55%, var(--login-bg-c));
+}
+
+.login-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(320px, 460px) minmax(260px, 380px);
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.login-card {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  padding: 1.4rem;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.32);
+}
+
+.login-header {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.logo-mark {
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 0.85rem;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+  background: linear-gradient(150deg, #1d4ed8, #0284c7);
+}
+
+.login-header h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  letter-spacing: 0.05em;
+}
+
+.login-header p {
+  margin: 0.1rem 0 0;
+  color: var(--card-muted);
+  font-size: 0.9rem;
+}
+
+.login-intro {
+  margin: 1rem 0;
+  color: var(--card-muted);
+  line-height: 1.5;
+}
+
+.form-group {
+  margin-bottom: 0.9rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.92rem;
+  color: #1e293b;
+}
+
+.form-group input {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.7rem;
+  padding: 0.72rem 0.78rem;
+  font-size: 0.95rem;
+}
+
+.form-group input:focus {
+  outline: 2px solid rgba(37, 99, 235, 0.18);
+  border-color: #2563eb;
+}
+
+.login-button {
+  width: 100%;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.78rem 1rem;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, #2563eb, #0284c7);
+}
+
+.loading {
+  display: none;
+}
+
+.loading.show {
+  display: inline-block;
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-right: 0.45rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  vertical-align: middle;
+}
+
+.form-message {
+  margin-top: 0.85rem;
+  border-radius: 0.7rem;
+  padding: 0.7rem 0.78rem;
+  font-size: 0.9rem;
+  display: none;
+}
+
+.form-message.success,
+.form-message.error {
+  display: block;
+}
+
+.form-message.success {
+  background: var(--success-bg);
+  color: var(--success-fg);
+  border: 1px solid #86efac;
+}
+
+.form-message.error {
+  background: var(--error-bg);
+  color: var(--error-fg);
+  border: 1px solid #fca5a5;
+}
+
+.demo-info {
+  margin-top: 1.05rem;
+  border-top: 1px solid var(--line);
+  padding-top: 0.9rem;
+}
+
+.demo-info h2 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.demo-creds {
+  margin: 0.6rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.48rem;
+}
+
+.demo-creds li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+  border: 1px solid var(--line);
+  background: #f8fbff;
+  border-radius: 0.65rem;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.86rem;
+}
+
+.role-tag {
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  padding: 0.15rem 0.52rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.login-side-note {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #dbeafe;
+  border-radius: 18px;
+  padding: 1.2rem;
+  background: rgba(15, 23, 42, 0.28);
+  backdrop-filter: blur(4px);
+}
+
+.login-side-note h2 {
+  margin: 0 0 0.55rem;
+  font-size: 1.05rem;
+}
+
+.login-side-note p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .login-shell {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .login-side-note {
+    order: -1;
+  }
+}
