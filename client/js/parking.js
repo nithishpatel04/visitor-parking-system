@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeButton = document.getElementById('closeParkingFormBtn');
 
   function showForm() {
-    if (Object.prototype.hasOwnProperty.call(formPanel, 'hidden')) {
+    if (formPanel) {
       formPanel.hidden = false;
     }
     if (createButton) {
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function hideForm() {
-    if (Object.prototype.hasOwnProperty.call(formPanel, 'hidden')) {
+    if (formPanel) {
       formPanel.hidden = true;
     }
     if (createButton) {
